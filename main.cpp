@@ -8,6 +8,8 @@
 
 #include <fstream>
 
+#include "procedures.h"
+
 // Use a DIMACS network flow file as stdin.
 // max_flow < max_flow.dat
 //
