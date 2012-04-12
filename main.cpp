@@ -9,18 +9,21 @@ int main()
 
 	vector<Simulation> mesSimulations;
 
+	//lancer_menu();
+
+	// Récupération des data d'entrées et construction de la simulation
 	listeFichiers = liste_fichiers_du_dossier("./DATA_SOURCE/*");
-
-	for (int i = 0; i < (signed)listeFichiers.size(); i++)
-		cout << listeFichiers.at(i) << endl;
-
 	mesSimulations.push_back(construction_simulation(listeFichiers));
+
 	
+	//for (int i = 0; i < (signed)listeFichiers.size(); i++)
+	//	cout << listeFichiers.at(i) << endl;
 
 	for (int i = 0; i < (signed)mesSimulations.size(); i++)
 	{
 		afficher_simulation(mesSimulations.at(i));
 	}
+
 
 	cerr << "how are you?" << endl;
 	

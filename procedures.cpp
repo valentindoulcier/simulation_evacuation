@@ -2,6 +2,46 @@
 
 
 
+void lancer_menu()
+{
+	int nb_solutions = -1;
+	int strategie = -1;
+	bool menu_valide = false;
+
+	cerr << "Bonjour et bienvenue :)" << endl << endl << endl;
+	cerr << "\tCombien de simulation(s) voulez-vous generer ?! ";
+	cin >> nb_solutions;
+	
+	while(!menu_valide)
+	{
+		cerr << "\tVoulez-vous avancer (0), retarder (1), aleatoirer (2) ?! ";
+		cin >> strategie;
+		if(strategie == 0 || strategie == 1 || strategie == 2)
+		{
+			menu_valide = true;
+		}
+	}
+
+
+	switch(strategie)
+	{
+		case 0:
+			cerr << endl << "Vous avez choisi de tester une strategie d'avancement\nsur un echantillon de " << nb_solutions << " simulations." << endl;
+			break;
+
+		case 1:
+			cerr << endl << "Vous avez choisi de tester une strategie de retardement\nsur un echantillon de " << nb_solutions << " simulations." << endl;
+			break;
+
+		case 2:
+			cerr << endl << "Vous avez choisi de tester une strategie aléatoire\nsur un echantillon de " << nb_solutions << " simulations." << endl;
+			break;
+
+		default: break;
+	}
+
+	system("pause");
+}
 
 vector<string> liste_fichiers_du_dossier(char * path)
 {
@@ -225,7 +265,6 @@ void afficher_simulation(Simulation simulation)
 			cerr << "\t\t\tBatiment n " << simulation.getCreneau_horaire().at(i)->batiment.at(j)->numero_batiment << " : " << simulation.getCreneau_horaire().at(i)->batiment.at(j)->population << " personnes" << endl;
 		}
 	}
-
 
 	cerr << endl << "----------------------------------------------" << endl;
 }

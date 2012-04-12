@@ -18,6 +18,8 @@
 
 using namespace std;
 
+void lancer_menu();
+
 vector<string> liste_fichiers_du_dossier(char *);
 
 Simulation construction_simulation(vector<string>);
