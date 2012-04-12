@@ -10,14 +10,26 @@
 #include <boost/graph/graph_utility.hpp>
 
 #include <fstream>
+#include <windows.h>
+#include <vector>
+#include <istream>
+
+#include "Simulation.h"
 
 using namespace std;
 
+vector<string> liste_fichiers_du_dossier(char *);
 
+Simulation construction_simulation(vector<string>);
 
-long lancer_flot_max();
+Creneau_horaire * parserFichier(string);
 
+void afficher_simulation(Simulation);
 
+long lancer_flot_max(string);
 
+LPCWSTR MultiCharToUniChar(char*);
+
+string UniCharToMultiChar(wchar_t*);
 
 #endif

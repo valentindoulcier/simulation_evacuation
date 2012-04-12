@@ -1,13 +1,375 @@
 c  The total flow:
-s 3001
-
 c flow values:
-f 0 1 3000
-f 0 2 1
-f 1 3 0
-f 2 1 1
-f 2 4 0
-f 3 2 0
-f 3 5 0
-f 4 3 0
-f 4 5 0
+f  enough memory to solve this problem.
+  
+ 
+
+ 
+ 
+
+ 
+ 
+ 
+mber of parameters in the node line. 
+ 
+
+ memory to solve this problem.
+ 
+ 
+
+
+oblem. 
+his problem. 
+ 
+
+
+
+ 
+ 
+ 
+in the node line.
+
+		Sommet final : wrong number of parameters in the node line.
+	Sommet final : 
+	Sommet final : g
+Sommet final : 
+ommet final : .
+mmet final :  
+met final :  
+et final : 
+t final : 
+ final : 
+final : 
+inal : 
+nal : 
+al : 
+l : 
+ : 
+: 
+ 
+u
+
+a
+
+
+
+t
+
+to solve this problem.
+ 
+_ 
+ in the node line. 
+p 
+ 
+descriptions must be before arc descriptions. 
+ descriptions must be before arc descriptions.
+sink descriptions must be before arc descriptions. 
+nd sink descriptions must be before arc descriptions. 
+'t obtain enough memory to solve this problem.
+
+ 
+
+ptions must be before arc descriptions.
+ 
+ 
+m. 
+ 
+t 
+ 
+d 
+ 
+ust be before arc descriptions. 
+this problem. 
+arc descriptions. 
+  
+e 
+ 
+e 
+ 
+ 
+r 
+		Creneau : VALIDEr 
+	Creneau : VALIDEe 
+	Creneau : VALIDE 
+Creneau : VALIDEf 
+reneau : VALIDE 
+eneau : VALIDE 
+neau : VALIDEn 
+eau : VALIDE 
+au : VALIDEroblem. 
+u : VALIDEb
+ : VALIDEbtain enough memory to solve this problem.
+: VALIDE
+ VALIDEobtain enough memory to solve this problem. 
+VALIDEs problem.
+ALIDEb 
+LIDE
+IDEa
+DEan't obtain enough memory to solve this problem. 
+El
+E
+
+olve this problem. 
+ 
+y to solve this problem. 
+
+n't obtain enough memory to solve this problem.
+ problem. 
+t obtain enough memory to solve this problem. 
+ obtain enough memory to solve this problem. 
+tain enough memory to solve this problem.
+em.
+ 
+ obtain enough memory to solve this problem. 
+c
+	Creneau n enough memory to solve this problem.
+Creneau n nough memory to solve this problem.
+reneau n 
+eneau n gh memory to solve this problem. 
+neau n s in the node line. 
+eau n r of parameters in the node line. 
+au n lem. 
+u n n
+ n ve this problem. 
+n  this problem. 
+ ry to solve this problem. 
+ solve this problem.
+mory to solve this problem. 
+ to solve this problem. 
+l 
+and sink descriptions must be before arc descriptions. 
+
+
+solve this problem.
+.
+lve this problem. 
+	La simulation est VALIDEre arc descriptions. 
+	La simulation est VALIDEemory to solve this problem. 
+La simulation est VALIDE
+a simulation est VALIDEve this problem.
+ simulation est VALIDEmemory to solve this problem. 
+simulation est VALIDEain enough memory to solve this problem. 
+imulation est VALIDEis problem. 
+mulation est VALIDEameters in the node line. 
+ulation est VALIDE
+lation est VALIDE 
+ation est VALIDEin enough memory to solve this problem. 
+tion est VALIDEproblem. 
+ion est VALIDEo 
+on est VALIDElve this problem. 
+n est VALIDE 
+ est VALIDEore arc descriptions. 
+ est VALIDEefore arc descriptions.
+est VALIDEons. 
+st VALIDE
+t VALIDE 
+t VALIDEparameters in the node line. 
+ VALIDE 
+VALIDE 
+ALIDErong number of parameters in the node line.
+LIDEumber of parameters in the node line.
+IDEng number of parameters in the node line.
+DEg number of parameters in the node line.
+E 
+ 
+ns.
+number of parameters in the node line.
+ber of parameters in the node line. 
+ 
+h memory to solve this problem. 
+er of parameters in the node line. 
+of parameters in the node line.
+ers in the node line.
+ parameters in the node line.
+
+ 
+rameters in the node line. 
+rs in the node line. 
+ugh memory to solve this problem. 
+ of parameters in the node line.
+ters in the node line. 
+arameters in the node line. 
+f parameters in the node line.
+criptions. 
+eters in the node line. 
+ 
+
+ the node line. 
+riptions. 
+e node line. 
+n the node line. 
+ node line. 
+he node line. 
+the node line. 
+ line.
+e line.
+
+line.
+de line.
+ode line.
+.
+ne.
+
+Cette simulation contient o
+ette simulation contient 
+tte simulation contient 
+te simulation contient 
+e simulation contient 
+ simulation contient 
+simulation contient 
+imulation contient o solve this problem.
+mulation contient 
+ulation contient  arc descriptions. 
+lation contient  
+lation contient escriptions. 
+ation contient  descriptions. 
+tion contient 
+ion contient v
+on contient c
+n contient e
+ contient 
+contient 
+ontient 
+ntient 
+tient t
+ient  
+ent  
+nt 
+t s
+  
+
+
+ 
+
+
+b
+ creneaux horaires.
+creneaux horaires.
+reneaux horaires.s
+eneaux horaires.c
+neaux horaires.
+eaux horaires.r
+aux horaires.
+ux horaires.
+x horaires.i
+ horaires.
+horaires.
+oraires.t
+raires.o
+aires.
+ires.r
+res.
+es.
+s.u
+.p
+
+f
+
+u
+
+o
+
+
+descriptions. 
+	La simulation est INVALIDEtions.
+La simulation est INVALIDEa
+a simulation est INVALIDEr
+ simulation est INVALIDEiptions.
+simulation est INVALIDErce and sink descriptions must be before arc descriptions.
+imulation est INVALIDE
+mulation est INVALIDEe
+ulation est INVALIDE
+lation est INVALIDEory to solve this problem.
+lation est INVALIDE and sink descriptions must be before arc descriptions. 
+ation est INVALIDE
+tion est INVALIDEg
+tion est INVALIDEn
+ion est INVALIDEiptions must be before arc descriptions.
+on est INVALIDEource and sink descriptions must be before arc descriptions. 
+n est INVALIDE be before arc descriptions. 
+ est INVALIDEriptions must be before arc descriptions. 
+est INVALIDEk descriptions must be before arc descriptions.
+st INVALIDE 
+t INVALIDEescriptions must be before arc descriptions. 
+ INVALIDEe and sink descriptions must be before arc descriptions. 
+INVALIDEink descriptions must be before arc descriptions. 
+NVALIDEt
+VALIDEnd sink descriptions must be before arc descriptions.
+ALIDEions must be before arc descriptions.
+LIDEr 
+IDEsource and sink descriptions must be before arc descriptions. 
+DE 
+Ed sink descriptions must be before arc descriptions.
+iptions must be before arc descriptions.
+ must be before arc descriptions. 
+scriptions must be before arc descriptions. 
+criptions must be before arc descriptions. 
+urce and sink descriptions must be before arc descriptions. 
+nk descriptions must be before arc descriptions. 
+ sink descriptions must be before arc descriptions.
+ce and sink descriptions must be before arc descriptions. 
+o
+n
+tions must be before arc descriptions.
+st be before arc descriptions. 
+ions. 
+ 
+s must be before arc descriptions. 
+ons must be before arc descriptions. 
+e arc descriptions. 
+t be before arc descriptions. 
+r 
+ns must be before arc descriptions. 
+e before arc descriptions. 
+must be before arc descriptions. 
+AFFICHAGE DE LA SIMULATIONbefore arc descriptions. 
+FFICHAGE DE LA SIMULATIONe 
+FICHAGE DE LA SIMULATIONn enough memory to solve this problem.
+ICHAGE DE LA SIMULATIONc descriptions. 
+CHAGE DE LA SIMULATIONn enough memory to solve this problem. 
+HAGE DE LA SIMULATIONrc descriptions. 
+AGE DE LA SIMULATIONcan't obtain enough memory to solve this problem. 
+GE DE LA SIMULATIONblem. 
+E DE LA SIMULATIONfore arc descriptions. 
+E DE LA SIMULATION 
+ DE LA SIMULATION number of parameters in the node line. 
+ DE LA SIMULATION 
+DE LA SIMULATION before arc descriptions. 
+E LA SIMULATIONnode line. 
+ LA SIMULATIONough memory to solve this problem. 
+LA SIMULATION 
+A SIMULATIONof parameters in the node line. 
+ SIMULATIONscriptions. 
+SIMULATIONbe before arc descriptions. 
+IMULATIONptions.
+MULATION
+ULATION
+LATIONs must be before arc descriptions. 
+ATION 
+TIONe.
+IONi
+ONs.
+N
+
+s
+----------------------------------------------
+---------------------------------------------e this problem.
+--------------------------------------------
+-------------------------------------------
+------------------------------------------
+-----------------------------------------ong number of parameters in the node line.
+----------------------------------------
+---------------------------------------r
+--------------------------------------meters in the node line.
+-------------------------------------
+------------------------------------ine.
+-----------------------------------s
+----------------------------------
+---------------------------------e 
+--------------------------------t
+-------------------------------t
+------------------------------ 
+------------------------------ 
+------------------------------
+------------------------------
+------------------------------

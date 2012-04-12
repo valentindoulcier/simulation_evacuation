@@ -1,14 +1,74 @@
-#include <boost/config.hpp>
-#include <iostream>
-#include <string>
-#include <boost/graph/push_relabel_max_flow.hpp>
-#include <boost/graph/adjacency_list.hpp>
-#include <boost/graph/read_dimacs.hpp>
-#include <boost/graph/graph_utility.hpp>
-
-#include <fstream>
-
 #include "procedures.h"
+#include "Simulation.h"
+
+using namespace std;
+
+int main()
+{
+	vector<string> listeFichiers;
+
+	vector<Simulation> mesSimulations;
+
+	listeFichiers = liste_fichiers_du_dossier("./DATA_SOURCE/*");
+
+	for (int i = 0; i < (signed)listeFichiers.size(); i++)
+		cout << listeFichiers.at(i) << endl;
+
+	mesSimulations.push_back(construction_simulation(listeFichiers));
+	
+
+	for (int i = 0; i < (signed)mesSimulations.size(); i++)
+	{
+		afficher_simulation(mesSimulations.at(i));
+	}
+
+	cerr << "how are you?" << endl;
+	
+	system("pause");
+	
+	return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+	WIN32_FIND_DATA File;
+    HANDLE hSearch;
+    
+    hSearch = FindFirstFile((LPCTSTR)"*.*", &File);
+    if (hSearch != INVALID_HANDLE_VALUE)
+    {
+        do {
+            printf("%s\n", File.cFileName);
+        } while (FindNextFile(hSearch, &File));
+        
+        FindClose(hSearch);
+    }
+	system("pause");
+    
+    return 0;
+*/
+
+
+
+
 
 // Use a DIMACS network flow file as stdin.
 // max_flow < max_flow.dat
@@ -38,18 +98,3 @@
 //  f 6 4 0
 //  f 7 6 0
 //  f 7 5 0
-using namespace std;
-
-int main()
-{
-	long result = 0;
-
-	result = lancer_flot_max();
-
-	cerr << "how are you?" << endl << endl;
-	cerr << "\tLe resultat est de : " << result << endl;
-	
-	system("pause");
-  
-	return 0;
-}
