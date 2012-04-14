@@ -20,6 +20,16 @@ using namespace std;
 
 void lancer_menu();
 
+void simuler(int, vector<Simulation>);
+
+void creer_simulation(int, vector<Simulation>);
+
+void creer_dossier_simul(int);
+
+int ** calculer_strategie(vector<Simulation>);
+
+void creer_fichiers(int, vector<Simulation>, int **);
+
 vector<string> liste_fichiers_du_dossier(char *);
 
 Simulation construction_simulation(vector<string>);

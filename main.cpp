@@ -3,6 +3,8 @@
 
 using namespace std;
 
+#define nb_simul 1
+
 int main()
 {
 	vector<string> listeFichiers;
@@ -11,21 +13,82 @@ int main()
 
 	//lancer_menu();
 
+
+
+
+	cerr << "\t////////////////////////////////////////////////////////////////" << endl;
+	cerr << "\t///////////////////////// SOURCE ///////////////////////////////" << endl;
+	cerr << "\t////////////////////////////////////////////////////////////////" << endl;
+	cerr << endl << endl;
+
 	// Récupération des data d'entrées et construction de la simulation
 	listeFichiers = liste_fichiers_du_dossier("./DATA_SOURCE/*");
 	mesSimulations.push_back(construction_simulation(listeFichiers));
 
-	
-	//for (int i = 0; i < (signed)listeFichiers.size(); i++)
-	//	cout << listeFichiers.at(i) << endl;
+	// Affichage de la liste des fichiers d'entrée
+	cerr << "Fichiers d'entree de la simulation mere :" << endl;
+	for (int i = 0; i < (signed)listeFichiers.size(); i++)
+		cerr << "\t" << listeFichiers.at(i) << endl;
 
+	// Affichage du résultat de la simulation initiale
 	for (int i = 0; i < (signed)mesSimulations.size(); i++)
-	{
 		afficher_simulation(mesSimulations.at(i));
+
+	listeFichiers.clear();
+
+
+
+
+
+	cerr << endl << endl;
+	cerr << "\t////////////////////////////////////////////////////////////////" << endl;
+	cerr << "\t///////////////////////// GENERATED ////////////////////////////" << endl;
+	cerr << "\t////////////////////////////////////////////////////////////////" << endl;
+	cerr << endl << endl;
+
+	char nom_dossier[29];
+
+	// On créé les simulations
+	simuler(nb_simul, mesSimulations);
+	
+	// Récupération des data d'entrées et construction de la simulation
+	for(int i = 0; i < nb_simul; ++i)
+	{
+		sprintf(nom_dossier,"./DATA_GENERATED/Simul_%i/*", i + 1);
+		listeFichiers = liste_fichiers_du_dossier(nom_dossier);
+		
+		// Affichage de la liste des fichiers d'entrée
+		if(listeFichiers.empty())
+		{
+			cerr << endl << "Fichiers d'entree de la simulation " << i + 1 << " :" << endl;
+			cerr << "\t" << "Dossier EMPTY" << endl;
+		}
+		else
+		{
+			cerr << endl << "Fichiers d'entree de la simulation " << i + 1 << " :" << endl;
+			for(int j = 0; j < (signed)listeFichiers.size(); ++j)
+				cerr << "\t" << listeFichiers.at(j) << endl;
+		}
+
+		//mesSimulations.push_back(construction_simulation(listeFichiers));
 	}
 
+	
+	// Affichage du résultat de la simulation
+	//for (int i = 0; i < (signed)mesSimulations.size(); i++)
+	//	afficher_simulation(mesSimulations.at(i));
 
-	cerr << "how are you?" << endl;
+
+
+
+
+	cerr << endl << endl;
+	cerr << "\t////////////////////////////////////////////////////////////////" << endl;
+	cerr << "\t///////////////////////// FIN //////////////////////////////////" << endl;
+	cerr << "\t////////////////////////////////////////////////////////////////" << endl;
+	cerr << endl << endl;
+
+	cerr << endl << "how are you?" << endl;
 	
 	system("pause");
 	

@@ -1,10 +1,12 @@
-﻿La génération a démarré 12/04/2012 18:58:23.
+﻿La génération a démarré 14/04/2012 20:42:49.
      1>Projet "C:\Users\Valentin\Desktop\EPU_DI_4A_SDLD_Projet_ACCELL\test_flot\test_flot.vcxproj" sur le nœud 2 (build cible(s)).
      1>InitializeBuildStatus:
          Création de "Debug\test_flot.unsuccessfulbuild", car "AlwaysCreate" a été spécifié.
        ClCompile:
-         c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _CRT_SECURE_NO_WARNINGS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt procedures.cpp
+         c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _CRT_SECURE_NO_WARNINGS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp procedures.cpp
          procedures.cpp
+         main.cpp
+         Génération de code en cours...
        ManifestResourceCompile:
          Toutes les sorties sont à jour.
        Link:
@@ -25,4 +27,4 @@
 
 La génération a réussi.
 
-Temps écoulé 00:00:10.51
+Temps écoulé 00:00:24.23

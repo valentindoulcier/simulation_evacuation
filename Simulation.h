@@ -1,6 +1,7 @@
 #ifndef SIMULATION
 #define SIMULATION
 
+#include <iostream>
 #include <vector>
 
 using namespace std;
@@ -29,6 +30,8 @@ class Simulation
 
 private:
 	bool valide;
+	int max_batiment;
+	vector< int > tableau_batiment;
 	vector< Creneau_horaire * > creneau_horaire;
 
 
@@ -38,6 +41,16 @@ public:
 
 	void setValide(bool);
 	bool getSimulationValide();
+
+	void setMax_batiment(int);
+	int getMax_batiment();
+	void incrementer_compteur_batiment();
+
+	void setTableau_batiment(int);
+	vector< int > getTableau_batiment();
+	bool contenir(int);
+
+	int indice(int);
 
 	void setCreneauHoraire(Creneau_horaire * monCreneauHoraire);
 	vector< Creneau_horaire * > getCreneau_horaire();

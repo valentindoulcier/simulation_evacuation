@@ -1,0 +1,7 @@
+ATTENTION A :
+
+
+VDO_	Calculer le nb de batiment max à mettre en tant que variable dans simulation
+VDO_	Batiments à NUL = Pas ce batiment dans la liste mais dans un autre créneau horaire
+VDO_	Mettre une protection sur les fichiers *.max dans les répertoires de Simul_x
+VDO_	Veiller à bien faire des free de chaque pointeur, et à vider les tableaux après utilisation
