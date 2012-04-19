@@ -1,12 +1,13 @@
-﻿La génération a démarré 14/04/2012 20:42:49.
+﻿La génération a démarré 19/04/2012 18:39:12.
      1>Projet "C:\Users\Valentin\Desktop\EPU_DI_4A_SDLD_Projet_ACCELL\test_flot\test_flot.vcxproj" sur le nœud 2 (build cible(s)).
      1>InitializeBuildStatus:
          Création de "Debug\test_flot.unsuccessfulbuild", car "AlwaysCreate" a été spécifié.
        ClCompile:
-         c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _CRT_SECURE_NO_WARNINGS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp procedures.cpp
+         c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _CRT_SECURE_NO_WARNINGS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt procedures.cpp
          procedures.cpp
-         main.cpp
-         Génération de code en cours...
+     1>c:\users\valentin\desktop\epu_di_4a_sdld_projet_accell\test_flot\procedures.cpp(50): warning C4244: 'argument' : conversion de 'time_t' en 'unsigned int', perte possible de données
+     1>c:\users\valentin\desktop\epu_di_4a_sdld_projet_accell\test_flot\procedures.cpp(241): warning C4244: '=' : conversion de 'int' en 'float', perte possible de données
+     1>c:\users\valentin\desktop\epu_di_4a_sdld_projet_accell\test_flot\procedures.cpp(318): warning C4244: '=' : conversion de 'int' en 'float', perte possible de données
        ManifestResourceCompile:
          Toutes les sorties sont à jour.
        Link:
@@ -27,4 +28,4 @@
 
 La génération a réussi.
 
-Temps écoulé 00:00:24.23
+Temps écoulé 00:00:11.79

@@ -14,7 +14,13 @@
 #include <vector>
 #include <istream>
 
+#include <time.h>
+
 #include "Simulation.h"
+
+#define situation 0
+
+
 
 using namespace std;
 
@@ -26,9 +32,9 @@ void creer_simulation(int, vector<Simulation>);
 
 void creer_dossier_simul(int);
 
-int ** calculer_strategie(vector<Simulation>);
+vector < list<int> > calculer_strategie(vector<Simulation>);
 
-void creer_fichiers(int, vector<Simulation>, int **);
+void creer_fichiers(int, vector<Simulation>, vector < list<int> >);
 
 vector<string> liste_fichiers_du_dossier(char *);
 

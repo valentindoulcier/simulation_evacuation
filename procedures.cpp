@@ -1,7 +1,6 @@
 #include "procedures.h"
 
 
-
 void lancer_menu()
 {
 	int nb_solutions = -1;
@@ -47,6 +46,9 @@ void lancer_menu()
 
 void simuler(int nb_simul, vector<Simulation> mesSimulations)
 {
+	/* initialize random seed: */
+	srand(time(NULL));
+
 	for(int i = 0; i < nb_simul; ++i)
 	{
 		creer_simulation(i, mesSimulations);
@@ -75,13 +77,25 @@ void creer_dossier_simul(int iPos)
 
 
 // Fonction qui construit une matrice de la population de la simulation initiale et qui retourne une nouvelle matrice.
-int ** calculer_strategie(vector<Simulation> mesSimulations)
+vector < list<int> > calculer_strategie(vector<Simulation> mesSimulations)
 {
-	int ratio = 2;
+	// x% des gens ont une chance de RESTER sur place.
+	float ratio = 50;
+
+	// Nombre de créneau AJOUTES => n + 1 possibilités (avec n = nb_amplitude)
+	int amplitude_avant = 1;
+	int amplitude_arriere = 0;
+
+	// Stratégie : [ 0 Anticipe ] [ 1 Retarde ] [ 2 Aléatoire ]
+	int strategie = 0;
+
+	/* generate secret number: */
+	float chance;
 	
 	cout << "SOLUTION MERE" << endl << endl;
 
 	int ** monTab;
+	vector<int> nb_personne_par_bat;
 
 	//Déclaration de mon tableau
 	monTab = new int* [mesSimulations.at(0).getMax_batiment()];
@@ -103,6 +117,17 @@ int ** calculer_strategie(vector<Simulation> mesSimulations)
 			monTab[indice][i] = mesSimulations.at(0).getCreneau_horaire().at(i)->batiment.at(j)->population;
 		}
 
+	int somme;
+	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
+	{
+		somme = 0;
+		for (int j = 0; j < (signed)mesSimulations.at(0).getCreneau_horaire().size(); ++j)
+			somme += monTab[i][j];
+		nb_personne_par_bat.push_back(somme);
+	}
+
+	//for(int i = 0; i < (signed)nb_personne_par_bat.size(); ++i)
+	//	cerr << "\n" << nb_personne_par_bat.at(i);
 
 	//Affichage de mon tableau
 	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
@@ -114,101 +139,328 @@ int ** calculer_strategie(vector<Simulation> mesSimulations)
 	cout << endl << endl;
 
 
-	cout << "SOLUTION 1" << endl << endl;
-	
-	int ** monTabSolution;
+	//cout << "INTERVALLES" << endl << endl;
+
+	float ** anticipation;
 
 	//Déclaration de mon tableau
-	monTabSolution = new int* [mesSimulations.at(0).getMax_batiment()];
+	anticipation = new float* [mesSimulations.at(0).getMax_batiment()];
 	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
-		monTabSolution[i] = new int [mesSimulations.at(0).getCreneau_horaire().size() + 1]; // ON NE CREE QU'UN CRENEAU HORAIRE EN PLUS
-
-
-	//Remplissage de mon tableau
+		anticipation[i] = new float [amplitude_avant + 1];
+	
 	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
-	{
-		monTabSolution[i][0] = (monTab[i][0] / ratio);
-		
-		for (int j = 0; j < (signed)mesSimulations.at(0).getCreneau_horaire().size() - 1; ++j)
+		for (int j = amplitude_avant; j >= 0; j--)
 		{
-			monTabSolution[i][j + 1] = (monTab[i][j] / ratio) + (monTab[i][j + 1] / ratio);
+			if( j == amplitude_avant )
+			{
+				anticipation[i][j] = ratio / 100;
+			}
+			else
+			{
+				anticipation[i][j] = (j + 1) * ( ( 1 - ( ratio / 100 ) ) / ( (amplitude_avant * ( amplitude_avant + 1 ) ) / 2 ) );
+			}
 		}
-		monTabSolution[i][mesSimulations.at(0).getCreneau_horaire().size()] = (monTab[i][mesSimulations.at(0).getCreneau_horaire().size() - 1] / ratio);
-	}
 
-	//Affichage de mon tableau
+	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
+		for (int j = 0; j < amplitude_avant + 1; ++j)
+			anticipation[i][j + 1] = anticipation[i][j] + anticipation[i][j + 1];
+	
 	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
 	{
-		cout << endl;
-		for (int j = 0; j < (signed)mesSimulations.at(0).getCreneau_horaire().size() + 1; ++j)
-			cout << "\t" << monTabSolution[i][j];
+		cout << endl << "\t";
+		for (int j = 0; j < amplitude_avant + 1; ++j)
+			cout << "\t" << anticipation[i][j];
 	}
 	cout << endl << endl;
 
-	/*
-	cout << "SOLUTION 2" << endl << endl;
 
 
-	vector < list<float> > monVector;
+
+	float ** retardement;
+
+	//Déclaration de mon tableau
+	retardement = new float* [mesSimulations.at(0).getMax_batiment()];
+	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
+		retardement[i] = new float [amplitude_arriere + 1];
+	
+
+	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
+		for (int j = 0; j <= amplitude_arriere; j++)
+		{
+			if( j == 0 )
+			{
+				retardement[i][j] = ratio / 100;
+			}
+			else
+			{
+				retardement[i][j] = (amplitude_arriere + 1 - j) * ( ( 1 - ( ratio / 100 ) ) / ( (amplitude_arriere * ( amplitude_arriere + 1 ) ) / 2 ) );
+			}
+		}
+
+	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
+		for (int j = 0; j < amplitude_arriere + 1; ++j)
+			retardement[i][j + 1] = retardement[i][j] + retardement[i][j + 1];
+
+	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
+	{
+		cout << endl << "\t";
+		for (int j = 0; j < amplitude_arriere + 1; ++j)
+			cout << "\t" << retardement[i][j];
+	}
+	cout << endl << endl;
+
+
+
+	float ** monTabSolution;
+
+	//Déclaration de mon tableau
+	monTabSolution = new float* [mesSimulations.at(0).getMax_batiment()];
+	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
+		monTabSolution[i] = new float [mesSimulations.at(0).getCreneau_horaire().size() + amplitude_avant + amplitude_arriere]; //TAILLE DU TABLEAU ADAPTEE
+
+
+	//Initialisation à 0
+	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
+		for (int j = 0; j < (signed)mesSimulations.at(0).getCreneau_horaire().size() + amplitude_avant + amplitude_arriere; ++j)
+			monTabSolution[i][j] = 0;
+	
+	//Remplissage de mon tableau
+	int tempo = 0;
+	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
+	{
+		for (int j = 0; j < (signed)mesSimulations.at(0).getCreneau_horaire().size(); ++j)
+		{
+			for(int k = 0; k < (signed)mesSimulations.at(0).getCreneau_horaire().at(j)->batiment.at(i)->population; ++k)
+			{
+				//GERER CAS ALEATOIRE
+				tempo = strategie;
+
+				if(tempo == 2)
+					tempo = rand() % 2;
+
+				chance = rand() % 1000;
+				chance /= 1000;
+				indice = -1;
+				
+				switch(tempo)
+				{
+					case 0 :
+
+						do{
+							indice++;
+						} while(chance > anticipation[i][indice]);
+
+						monTabSolution[i][indice + j] += 1;
+						
+						
+						break;
+
+					case 1 :
+						
+						do{
+							indice++;
+						} while(chance > retardement[i][indice]);
+
+						monTabSolution[i][indice + j + amplitude_avant] += 1;
+						
+						break;
+
+					default: break;
+				}
+			}
+		}
+	}
+
+	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
+		for (int j = 0; j < (signed)mesSimulations.at(0).getCreneau_horaire().size() + amplitude_avant + amplitude_arriere; ++j)
+			monTabSolution[i][j] = monTabSolution[i][j] / nb_personne_par_bat.at(i);
+
+	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
+		for (int j = 0; j < (signed)mesSimulations.at(0).getCreneau_horaire().size() + amplitude_avant + amplitude_arriere; ++j)
+			monTabSolution[i][j + 1] = monTabSolution[i][j] + monTabSolution[i][j + 1];
+
+	
+	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
+	{
+		cout << endl << "\t";
+		for (int j = 0; j < (signed)mesSimulations.at(0).getCreneau_horaire().size() + amplitude_avant + amplitude_arriere; ++j)
+			cout << "\t" << monTabSolution[i][j];
+	}
+	cout << endl << endl;
+	
+
+	cout << "SOLUTION" << endl << endl;
+
+	int ** maPopulation;
+
+	//Déclaration de mon tableau
+	maPopulation = new int* [mesSimulations.at(0).getMax_batiment()];
+	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
+		maPopulation[i] = new int [mesSimulations.at(0).getCreneau_horaire().size() + amplitude_avant + amplitude_arriere];
+
+	//Initialisation à 0
+	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
+		for (int j = 0; j < (signed)mesSimulations.at(0).getCreneau_horaire().size() + amplitude_avant + amplitude_arriere; ++j)
+			maPopulation[i][j] = 0;
+
+	
+	vector < list<int> > monVector;
+	list<int>::iterator it;
 	//monVector.at(0).push_front(5);
 	//monVector.at(0).front();
 
 
 	//Calcul de ma nouvelle stratégie
-
-	for(int i = 0; i < (signed)mesSimulations.at(0).getCreneau_horaire().at(0)->batiment.size(); ++i)
+	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
 	{
-		monVector.at(i).push_back(monTab[i][0] / ratio);
-		for (int j = 0; j < (signed)mesSimulations.at(0).getCreneau_horaire().size() - 1; ++j)
+		for(int j = 0; j < nb_personne_par_bat.at(i); ++j)
 		{
-			monVector.at(i).push_back(c);
+			chance = rand() % 1000;
+			chance /= 1000;
+			indice = -1;
+
+			do{
+				indice++;
+			} while(chance > monTabSolution[i][indice]);
+
+			maPopulation[i][indice] += 1;
 		}
-		monVector.at(i).push_back(monTab[i][mesSimulations.at(0).getCreneau_horaire().size()] / ratio);
 	}
 
-
-	//Affichage de ma nouvelle stratégie
-
-	for(int i = 0; i < (signed)mesSimulations.at(0).getCreneau_horaire().at(0)->batiment.size(); ++i)
+	/*
+	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
 	{
-		cout << endl;
-		for (int j = 0; j < (signed)mesSimulations.at(0).getCreneau_horaire().size() + 1; ++j)
-			cout << "\t" << monVector.at(i).at(j);
+		cout << endl << "\t";
+		for (int j = 0; j < (signed)mesSimulations.at(0).getCreneau_horaire().size() + amplitude_avant + amplitude_arriere; ++j)
+			cout << "\t" << maPopulation[i][j];
 	}
 	cout << endl << endl;
 	*/
 
-	return monTabSolution;
+
+
+	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
+	{
+		list<int> maListe;
+		monVector.push_back(maListe);
+
+		for (int j = 0; j < (signed)mesSimulations.at(0).getCreneau_horaire().size() + amplitude_avant + amplitude_arriere; ++j)
+		{
+			monVector.at(i).push_back(maPopulation[i][j]);
+		}
+	}
+
+
+	//Affichage de ma nouvelle stratégie
+	for(int i = 0; i < (signed)monVector.size(); ++i)
+	{
+		cerr << endl << "\t";
+		for(it = monVector.at(i).begin(); it != monVector.at(i).end(); ++it)
+			cerr << "\t" << (*it);
+	}
+	cerr << endl << endl;
+
+	return monVector;
 }
 
-void creer_fichiers(int iPos, vector<Simulation> mesSimulations, int ** monTabSolution)
+void creer_fichiers(int iPos, vector<Simulation> mesSimulations, vector < list<int> > monVector)
 {
+	/*
 	char nom_fichier[42];
 
-	for(int i = 0; i < (signed)mesSimulations.at(0).getCreneau_horaire().size() + 1; ++i)	// CRACRA !!!!!!!!!!!!!!!!!!!!!!!!!!!! Mettre taille vector
+	int cas = situation;
+
+	int nb_creneau_simul_mere = mesSimulations.at(0).getCreneau_horaire().size();
+	int nb_creneau_simul_cree = monVector.at(0).size();
+	int nb_creneau_simul_diff = abs(nb_creneau_simul_mere - nb_creneau_simul_cree);
+	int tempo = nb_creneau_simul_mere;
+	
+	//cerr << "Nombre de creneau de la simul mere : " << nb_creneau_simul_mere << endl;
+	//cerr << "Nombre de creneau de la simul cree : " << nb_creneau_simul_cree << endl;
+	//cerr << "\t Rajout de " << abs(nb_creneau_simul_mere - nb_creneau_simul_cree) << " simulations" << endl;
+
+
+	for(int i = 0; i < nb_creneau_simul_cree; ++i) // Je tape la liste
 	{
 		sprintf(nom_fichier,"./DATA_GENERATED/Simul_%i/sample_%i.max", iPos + 1, i);
 	
-		ofstream fichier(nom_fichier, ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
+		ofstream fichier(nom_fichier, ios::out | ios::trunc);						// ouverture en écriture avec effacement du fichier ouvert
  
 		if(fichier)
 		{
-			string nom = "Valentin";
-			int age = 22;
-			fichier << mesSimulations.at(0).getCreneau_horaire().at(0)->debut;
+			if(cas == 0) // On ANTICIPE
+			{
+				if(nb_creneau_simul_diff > 0) // ON AVANCE ET Y'A DES CRENEAUX EN PLUS
+				{
+					//cerr << "ANTICIPE " << i << endl;
+					fichier << mesSimulations.at(0).getCreneau_horaire().at(0)->debut;
 			
-			for(int j = 0; j < (signed)mesSimulations.at(0).getMax_batiment(); ++j)
-				fichier << "A MOI DE JOUERRRRRRRRRRRRRRRRRRRR\n";
+					for(int j = 0; j < (signed)mesSimulations.at(0).getMax_batiment(); ++j)
+					{
+						fichier << "a " << mesSimulations.at(0).getCreneau_horaire().at(0)->sommet_initial << " " << mesSimulations.at(0).getTableau_batiment().at(j) << " " << monVector.at(j).front() << endl;
+						monVector.at(j).pop_front();
+					}
 
-			fichier << mesSimulations.at(0).getCreneau_horaire().at(0)->fin;
+					fichier << mesSimulations.at(0).getCreneau_horaire().at(0)->fin;
+
+					nb_creneau_simul_diff--;
+				}
+				else
+				{
+					//cerr << "NORMAL " << i << endl;
+					fichier << mesSimulations.at(0).getCreneau_horaire().at(i - abs(nb_creneau_simul_mere - nb_creneau_simul_cree))->debut;
+			
+					for(int j = 0; j < (signed)mesSimulations.at(0).getMax_batiment(); ++j)
+					{
+						fichier << "a " << mesSimulations.at(0).getCreneau_horaire().at(i - abs(nb_creneau_simul_mere - nb_creneau_simul_cree))->sommet_initial << " " << mesSimulations.at(0).getTableau_batiment().at(j) << " " << monVector.at(j).front() << endl;
+						monVector.at(j).pop_front();
+					}
+
+					fichier << mesSimulations.at(0).getCreneau_horaire().at(i - abs(nb_creneau_simul_mere - nb_creneau_simul_cree))->fin;
+				}
+			}
+			else if(cas == 1) // ON RETARDE
+			{
+				if(tempo > 0)
+				{
+					cerr << "NORMAL " << i << endl;
+					fichier << mesSimulations.at(0).getCreneau_horaire().at(i - abs(nb_creneau_simul_mere - nb_creneau_simul_cree))->debut;
+			
+					for(int j = 0; j < (signed)mesSimulations.at(0).getMax_batiment(); ++j)
+					{
+						fichier << "a " << mesSimulations.at(0).getCreneau_horaire().at(i - abs(nb_creneau_simul_mere - nb_creneau_simul_cree))->sommet_initial << " " << mesSimulations.at(0).getTableau_batiment().at(j) << " " << monVector.at(j).front() << endl;
+						monVector.at(j).pop_front();
+					}
+
+					fichier << mesSimulations.at(0).getCreneau_horaire().at(i - abs(nb_creneau_simul_mere - nb_creneau_simul_cree))->fin;
+
+					tempo--;
+				}
+				else if(nb_creneau_simul_diff > 0) // ON RETARDE ET Y'A DES CRENEAUX EN PLUS
+				{
+					cerr << "RETARDE " << i << endl;
+					fichier << mesSimulations.at(0).getCreneau_horaire().at(mesSimulations.at(0).getCreneau_horaire().size())->debut;
+			
+					for(int j = 0; j < (signed)mesSimulations.at(0).getMax_batiment(); ++j)
+					{
+						fichier << "a " << mesSimulations.at(0).getCreneau_horaire().at(mesSimulations.at(0).getCreneau_horaire().size())->sommet_initial << " " << mesSimulations.at(0).getTableau_batiment().at(j) << " " << monVector.at(j).front() << endl;
+						monVector.at(j).pop_front();
+					}
+
+					fichier << mesSimulations.at(0).getCreneau_horaire().at(mesSimulations.at(0).getCreneau_horaire().size())->fin;
+
+					nb_creneau_simul_diff--;
+				}
+			}
+			else
+				cerr << "PROBLEME : ANTICIPE OU RETARDE ?" << endl;
  
 			fichier.close();
 		}
 		else
 			cerr << "Impossible d'ouvrir le fichier !" << endl;
 	}
-
-	
+	*/
 }
 
 

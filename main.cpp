@@ -14,8 +14,6 @@ int main()
 	//lancer_menu();
 
 
-
-
 	cerr << "\t////////////////////////////////////////////////////////////////" << endl;
 	cerr << "\t///////////////////////// SOURCE ///////////////////////////////" << endl;
 	cerr << "\t////////////////////////////////////////////////////////////////" << endl;
@@ -70,14 +68,13 @@ int main()
 				cerr << "\t" << listeFichiers.at(j) << endl;
 		}
 
-		//mesSimulations.push_back(construction_simulation(listeFichiers));
+		mesSimulations.push_back(construction_simulation(listeFichiers));
 	}
-
 	
 	// Affichage du résultat de la simulation
-	//for (int i = 0; i < (signed)mesSimulations.size(); i++)
-	//	afficher_simulation(mesSimulations.at(i));
-
+	for (int i = 1; i < (signed)mesSimulations.size(); i++)
+		afficher_simulation(mesSimulations.at(i));
+		
 
 
 
