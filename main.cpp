@@ -1,12 +1,17 @@
 #include "procedures.h"
 #include "Simulation.h"
+#include "Parametres.h"
 
 using namespace std;
 
-#define nb_simul 1
-
 int main()
 {
+	Parametres * parametres;
+	parametres = Parametres::getInstance();
+	parametres->parserFichierConfiguration();
+	parametres->afficherParametres();
+
+
 	vector<string> listeFichiers;
 
 	vector<Simulation> mesSimulations;
@@ -47,10 +52,10 @@ int main()
 	char nom_dossier[29];
 
 	// On créé les simulations
-	simuler(nb_simul, mesSimulations);
+	simuler(parametres->getNbSimulation(), mesSimulations);
 	
 	// Récupération des data d'entrées et construction de la simulation
-	for(int i = 0; i < nb_simul; ++i)
+	for(int i = 0; i < parametres->getNbSimulation(); ++i)
 	{
 		sprintf(nom_dossier,"./DATA_GENERATED/Simul_%i/*", i + 1);
 		listeFichiers = liste_fichiers_du_dossier(nom_dossier);

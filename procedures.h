@@ -17,9 +17,7 @@
 #include <time.h>
 
 #include "Simulation.h"
-
-#define situation 0
-
+#include "Parametres.h"
 
 
 using namespace std;

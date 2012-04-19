@@ -47,7 +47,7 @@ void lancer_menu()
 void simuler(int nb_simul, vector<Simulation> mesSimulations)
 {
 	/* initialize random seed: */
-	srand(time(NULL));
+	srand((unsigned int)time(NULL));
 
 	for(int i = 0; i < nb_simul; ++i)
 	{
@@ -79,15 +79,18 @@ void creer_dossier_simul(int iPos)
 // Fonction qui construit une matrice de la population de la simulation initiale et qui retourne une nouvelle matrice.
 vector < list<int> > calculer_strategie(vector<Simulation> mesSimulations)
 {
+	Parametres * parametres;
+	parametres = Parametres::getInstance();
+
 	// x% des gens ont une chance de RESTER sur place.
 	float ratio = 50;
 
 	// Nombre de créneau AJOUTES => n + 1 possibilités (avec n = nb_amplitude)
-	int amplitude_avant = 1;
-	int amplitude_arriere = 0;
+	int amplitude_avant = parametres->getAmplitudeAvant();
+	int amplitude_arriere = parametres->getAmplitudeArriere();
 
 	// Stratégie : [ 0 Anticipe ] [ 1 Retarde ] [ 2 Aléatoire ]
-	int strategie = 0;
+	int strategie = parametres->getStrategie();
 
 	/* generate secret number: */
 	float chance;
@@ -238,7 +241,7 @@ vector < list<int> > calculer_strategie(vector<Simulation> mesSimulations)
 				if(tempo == 2)
 					tempo = rand() % 2;
 
-				chance = rand() % 1000;
+				chance = (float)(rand() % 1000);
 				chance /= 1000;
 				indice = -1;
 				
@@ -315,7 +318,7 @@ vector < list<int> > calculer_strategie(vector<Simulation> mesSimulations)
 	{
 		for(int j = 0; j < nb_personne_par_bat.at(i); ++j)
 		{
-			chance = rand() % 1000;
+			chance = (float)(rand() % 1000);
 			chance /= 1000;
 			indice = -1;
 

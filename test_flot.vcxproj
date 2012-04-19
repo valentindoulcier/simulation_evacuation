@@ -92,11 +92,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="procedures.cpp" />
+    <ClCompile Include="Parametres.cpp" />
+    <ClCompile Include="Procedures.cpp" />
     <ClCompile Include="Simulation.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="procedures.h" />
+    <ClInclude Include="Parametres.h" />
+    <ClInclude Include="Procedures.h" />
     <ClInclude Include="Simulation.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,0 +1,31 @@
+c	Ceci est le fichier de configuration
+c
+c	Il comporte toutes les données initiales
+c	nécessaires au lancement du programme.
+c
+c
+c
+c	Nombre de simulations souhaitées
+a	1
+c
+c
+c
+c	Stratégie voulue [ 0 Anticipation ] [ 1 Retardement ] [ 2 Free Style ]
+b	0
+c
+c
+c
+c
+c	Amplitude Anticipation
+d	1
+c
+c
+c
+c
+c	Amplitude Retardement
+e	0
+c
+c
+c
+c
+c
