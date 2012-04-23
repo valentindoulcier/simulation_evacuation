@@ -44,30 +44,30 @@ void lancer_menu()
 
 
 
-void simuler(int nb_simul, vector<Simulation> mesSimulations)
+void repliquer(int num_scenario, int nb_simul, vector<Simulation> mesSimulations)
 {
 	/* initialize random seed: */
 	srand((unsigned int)time(NULL));
 
 	for(int i = 0; i < nb_simul; ++i)
 	{
-		creer_simulation(i, mesSimulations);
+		creer_replication(num_scenario, i, mesSimulations);
 	}
 }
 
 
-void creer_simulation(int iPos, vector<Simulation> mesSimulations)
+void creer_replication(int num_scenatio, int iPos, vector<Simulation> mesSimulations)
 {
-	creer_dossier_simul(iPos);
-	creer_fichiers(iPos, mesSimulations, calculer_strategie(mesSimulations));
+	creer_dossier_replication(num_scenatio, iPos);
+	creer_fichiers(num_scenatio, iPos, mesSimulations, calculer_strategie(mesSimulations));
 }
 
 
-void creer_dossier_simul(int iPos)
+void creer_dossier_replication(int num_scenario, int iPos)
 {
-	char nom_dossier[27];
+	char nom_dossier[46];
 
-	sprintf(nom_dossier,"./DATA_GENERATED/Simul_%i", iPos + 1);
+	sprintf(nom_dossier,"./DATA_GENERATED/Scenario_%i/Replication_%i", num_scenario, iPos + 1);
 	
 	//RemoveDirectory(MultiCharToUniChar(nom_dossier));
 
@@ -79,11 +79,20 @@ void creer_dossier_simul(int iPos)
 // Fonction qui construit une matrice de la population de la simulation initiale et qui retourne une nouvelle matrice.
 vector < list<int> > calculer_strategie(vector<Simulation> mesSimulations)
 {
+	static int compteur = 0;
+	compteur++;
+	cerr << endl << endl;
+	cerr << "//////////////////////////////////" << endl;
+	cerr << "/////////// Simul_" << compteur << " //////////////" << endl;
+	cerr << "//////////////////////////////////" << endl;
+	cerr << endl << endl;
+
+
 	Parametres * parametres;
 	parametres = Parametres::getInstance();
 
 	// x% des gens ont une chance de RESTER sur place.
-	float ratio = 50;
+	float ratio;
 
 	// Nombre de créneau AJOUTES => n + 1 possibilités (avec n = nb_amplitude)
 	int amplitude_avant = parametres->getAmplitudeAvant();
@@ -152,6 +161,9 @@ vector < list<int> > calculer_strategie(vector<Simulation> mesSimulations)
 		anticipation[i] = new float [amplitude_avant + 1];
 	
 	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
+	{
+		ratio = (float)(rand() % 100);
+		cout << "Ratio d'anticipation du batiment " << i << " : " << ratio << "%" << endl;
 		for (int j = amplitude_avant; j >= 0; j--)
 		{
 			if( j == amplitude_avant )
@@ -163,6 +175,7 @@ vector < list<int> > calculer_strategie(vector<Simulation> mesSimulations)
 				anticipation[i][j] = (j + 1) * ( ( 1 - ( ratio / 100 ) ) / ( (amplitude_avant * ( amplitude_avant + 1 ) ) / 2 ) );
 			}
 		}
+	}
 
 	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
 		for (int j = 0; j < amplitude_avant + 1; ++j)
@@ -178,7 +191,6 @@ vector < list<int> > calculer_strategie(vector<Simulation> mesSimulations)
 
 
 
-
 	float ** retardement;
 
 	//Déclaration de mon tableau
@@ -188,6 +200,9 @@ vector < list<int> > calculer_strategie(vector<Simulation> mesSimulations)
 	
 
 	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
+	{
+		ratio = (float)(rand() % 100);
+		cout << "Ratio de retardement du batiment " << i << " : " << ratio << "%" << endl;
 		for (int j = 0; j <= amplitude_arriere; j++)
 		{
 			if( j == 0 )
@@ -199,6 +214,7 @@ vector < list<int> > calculer_strategie(vector<Simulation> mesSimulations)
 				retardement[i][j] = (amplitude_arriere + 1 - j) * ( ( 1 - ( ratio / 100 ) ) / ( (amplitude_arriere * ( amplitude_arriere + 1 ) ) / 2 ) );
 			}
 		}
+	}
 
 	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
 		for (int j = 0; j < amplitude_arriere + 1; ++j)
@@ -366,12 +382,14 @@ vector < list<int> > calculer_strategie(vector<Simulation> mesSimulations)
 	return monVector;
 }
 
-void creer_fichiers(int iPos, vector<Simulation> mesSimulations, vector < list<int> > monVector)
+void creer_fichiers(int num_scenario, int iPos, vector<Simulation> mesSimulations, vector < list<int> > monVector)
 {
-	/*
-	char nom_fichier[42];
+	Parametres * parametres;
+	parametres = Parametres::getInstance();
 
-	int cas = situation;
+	char nom_fichier[60];
+
+	int cas = parametres->getStrategie();
 
 	int nb_creneau_simul_mere = mesSimulations.at(0).getCreneau_horaire().size();
 	int nb_creneau_simul_cree = monVector.at(0).size();
@@ -385,7 +403,7 @@ void creer_fichiers(int iPos, vector<Simulation> mesSimulations, vector < list<i
 
 	for(int i = 0; i < nb_creneau_simul_cree; ++i) // Je tape la liste
 	{
-		sprintf(nom_fichier,"./DATA_GENERATED/Simul_%i/sample_%i.max", iPos + 1, i);
+		sprintf(nom_fichier,"./DATA_GENERATED/Scenario_%i/Replication_%i/sample_%i.max", num_scenario, iPos + 1, i);
 	
 		ofstream fichier(nom_fichier, ios::out | ios::trunc);						// ouverture en écriture avec effacement du fichier ouvert
  
@@ -463,7 +481,6 @@ void creer_fichiers(int iPos, vector<Simulation> mesSimulations, vector < list<i
 		else
 			cerr << "Impossible d'ouvrir le fichier !" << endl;
 	}
-	*/
 }
 
 
@@ -798,4 +815,10 @@ string UniCharToMultiChar(wchar_t* mbString)
 	wcstombs(ucString, mbString, len);
 
 	return (string)ucString;
+}
+
+void Color(int f, int t)
+{
+    HANDLE H=GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(H,f*16+t);
 }

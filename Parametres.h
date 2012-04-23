@@ -12,17 +12,29 @@ using namespace std;
 class Parametres
 {
 private:
+	int nb_sous_replication;
+	int intervalle_de_confiance;
+	int strategie;
 	int amplitude_avant;
 	int amplitude_arriere;
-	int strategie;
-	int nb_simulation;
+	bool mode_debug;
 	Parametres(void);
 	~Parametres(void);
 	static Parametres * instance;
 
 public:
 	void parserFichierConfiguration();
+	void validationDataEntrees();
 	void afficherParametres();
+
+	void setNbSousReplication(int);
+	int getNbSousReplication();
+
+	void setIntervalleConfiance(int);
+	int getIntervalleConfiance();
+	
+	void setStrategie(int);
+	int getStrategie();
 
 	void setAmplitudeAvant(int);
 	int getAmplitudeAvant();
@@ -30,11 +42,8 @@ public:
 	void setAmplitudeArriere(int);
 	int getAmplitudeArriere();
 
-	void setStrategie(int);
-	int getStrategie();
-
-	void setNbSimulation(int);
-	int getNbSimulation();
+	void setModeDebug(bool);
+	bool getModeDebug();
 
 	static Parametres * getInstance ();
 

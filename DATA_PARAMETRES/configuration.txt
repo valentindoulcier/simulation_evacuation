@@ -5,27 +5,35 @@ c	nécessaires au lancement du programme.
 c
 c
 c
-c	Nombre de simulations souhaitées
-a	1
+c	Nombre de sous-réplications souhaitées
+f	10
+c
+c
+c
+c
+c	Intervalle de confiance souhaité (en %)
+g	1
+c
 c
 c
 c
 c	Stratégie voulue [ 0 Anticipation ] [ 1 Retardement ] [ 2 Free Style ]
-b	0
-c
-c
-c
-c
-c	Amplitude Anticipation
-d	1
-c
-c
-c
-c
-c	Amplitude Retardement
 e	0
 c
 c
 c
 c
+c	Amplitude Anticipation
+a	1
 c
+c
+c
+c
+c	Amplitude Retardement
+b	1
+c
+c
+c
+c
+c	Mode débugg
+d	0

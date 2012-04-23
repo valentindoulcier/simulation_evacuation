@@ -20,6 +20,28 @@ Parametres * Parametres::getInstance ()
 	return instance;
 }
 
+
+void Parametres::setNbSousReplication(int nb)
+{
+	nb_sous_replication = nb;
+}
+
+int Parametres::getNbSousReplication()
+{
+	return nb_sous_replication;
+}
+
+void Parametres::setIntervalleConfiance(int intervalle)
+{
+	intervalle_de_confiance = intervalle;
+}
+
+int Parametres::getIntervalleConfiance()
+{
+	return intervalle_de_confiance;
+}
+
+
 void Parametres::setAmplitudeAvant(int amplitude)
 {
 	amplitude_avant = amplitude;
@@ -50,14 +72,14 @@ int Parametres::getStrategie()
 	return strategie;
 }
 
-void Parametres::setNbSimulation(int nb_simul)
+void Parametres::setModeDebug(bool mode)
 {
-	nb_simulation = nb_simul;
+	mode_debug = mode;
 }
 
-int Parametres::getNbSimulation()
+bool Parametres::getModeDebug()
 {
-	return nb_simulation;
+	return mode_debug;
 }
 
 
@@ -89,14 +111,14 @@ void Parametres::parserFichierConfiguration()
 					case 'a':
 						pch = strtok(NULL, " \t\n");
 
-						nb_simulation = atoi(pch);
+						amplitude_avant = atoi(pch);
 						
 						break;
 
 					case 'b':
 						pch = strtok(NULL, " \t\n");
 
-						strategie = atoi(pch);
+						amplitude_arriere = atoi(pch);
 						
 						break;
 
@@ -105,14 +127,31 @@ void Parametres::parserFichierConfiguration()
 					case 'd':
 						pch = strtok(NULL, " \t\n");
 
-						amplitude_avant = atoi(pch);
+						if(atoi(pch) == 0)
+							mode_debug = false;
+						else
+							mode_debug = true;
 						
 						break;
 
 					case 'e':
 						pch = strtok(NULL, " \t\n");
 
-						amplitude_arriere = atoi(pch);
+						strategie = atoi(pch);
+						
+						break;
+
+					case 'f':
+						pch = strtok(NULL, " \t\n");
+
+						nb_sous_replication = atoi(pch);
+						
+						break;
+
+					case 'g':
+						pch = strtok(NULL, " \t\n");
+
+						intervalle_de_confiance = atoi(pch);
 						
 						break;
 
@@ -127,17 +166,44 @@ void Parametres::parserFichierConfiguration()
 }
 
 
+void Parametres::validationDataEntrees()
+{
+	if(strategie != 0 && strategie != 1 && strategie != 2)
+	{
+		strategie = 2;
+	}
+
+	if(strategie == 0)
+	{
+		amplitude_arriere = 0;
+	}
+	else if(strategie == 1)
+	{
+		amplitude_avant = 0;
+	}
+}
+
+
 void Parametres::afficherParametres()
 {
-	cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl << endl;
+	cout << endl << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl << endl;
 
-	cout << "\tNombre de simulation : " << nb_simulation << endl;
+	cout << "AFFICHAGE DES PARAMETRES" << endl << endl;
 
-	cout << "\tChoix de strategie : " << strategie << endl;
+	cout << "\tNombre de sous-replication.............." << nb_sous_replication << endl;
 
-	cout << "\tAmplitude avant : " << amplitude_avant << endl;
+	cout << "\tIntervalle de confiance souhaite........" << intervalle_de_confiance << endl;
 
-	cout << "\tAmplitude arriere : " << amplitude_arriere << endl << endl;
+	cout << "\tChoix de strategie......................" << strategie << endl;
 
-	cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl << endl;
+	cout << "\tAmplitude avant........................." << amplitude_avant << endl;
+
+	cout << "\tAmplitude arriere......................." << amplitude_arriere << endl;
+
+	if(mode_debug)
+		cout << "\tMode Debug..............................ACTIVE" << endl << endl;
+	else
+		cout << "\tMode Debug..............................DESACTIVE" << endl << endl;
+
+	cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl << endl << endl;
 }

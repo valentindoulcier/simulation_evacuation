@@ -2,15 +2,46 @@
 #include "Simulation.h"
 #include "Parametres.h"
 
+#include "time.h"
+
 using namespace std;
+
+
+typedef struct _Analyse
+{
+	int nb_scenario;
+	int intervalle_de_confiance;
+} Analyse;
+
 
 int main()
 {
+	SetConsoleTitle(MultiCharToUniChar("DOULCIER_MARCINKOWSKI  -  Projet ACCELL"));
+
+	clock_t start;
+	clock_t end;
+    double elapsed;
+
+	// Lancement de la mesure
+	start = clock();
+
 	Parametres * parametres;
 	parametres = Parametres::getInstance();
 	parametres->parserFichierConfiguration();
+	parametres->validationDataEntrees();
 	parametres->afficherParametres();
 
+	//system("COLOR F0");
+	//Color(15,12);
+	Color(0,12);
+    printf("Test Before\n");
+	//Color(15,0);
+	Color(0,7);
+    printf("Test After\n");
+
+	Analyse * analyse = new Analyse();
+	analyse->nb_scenario = 0;
+	analyse->intervalle_de_confiance = 0;
 
 	vector<string> listeFichiers;
 
@@ -18,7 +49,7 @@ int main()
 
 	//lancer_menu();
 
-
+	cerr << endl;
 	cerr << "\t////////////////////////////////////////////////////////////////" << endl;
 	cerr << "\t///////////////////////// SOURCE ///////////////////////////////" << endl;
 	cerr << "\t////////////////////////////////////////////////////////////////" << endl;
@@ -32,6 +63,7 @@ int main()
 	cerr << "Fichiers d'entree de la simulation mere :" << endl;
 	for (int i = 0; i < (signed)listeFichiers.size(); i++)
 		cerr << "\t" << listeFichiers.at(i) << endl;
+	cerr << endl;
 
 	// Affichage du résultat de la simulation initiale
 	for (int i = 0; i < (signed)mesSimulations.size(); i++)
@@ -49,31 +81,49 @@ int main()
 	cerr << "\t////////////////////////////////////////////////////////////////" << endl;
 	cerr << endl << endl;
 
-	char nom_dossier[29];
+	char nom_dossier[41];
 
-	// On créé les simulations
-	simuler(parametres->getNbSimulation(), mesSimulations);
-	
-	// Récupération des data d'entrées et construction de la simulation
-	for(int i = 0; i < parametres->getNbSimulation(); ++i)
+
+	while(parametres->getIntervalleConfiance() > analyse->intervalle_de_confiance)
 	{
-		sprintf(nom_dossier,"./DATA_GENERATED/Simul_%i/*", i + 1);
-		listeFichiers = liste_fichiers_du_dossier(nom_dossier);
-		
-		// Affichage de la liste des fichiers d'entrée
-		if(listeFichiers.empty())
+		for(int i = 0; i < 5; ++i)
 		{
-			cerr << endl << "Fichiers d'entree de la simulation " << i + 1 << " :" << endl;
-			cerr << "\t" << "Dossier EMPTY" << endl;
-		}
-		else
-		{
-			cerr << endl << "Fichiers d'entree de la simulation " << i + 1 << " :" << endl;
-			for(int j = 0; j < (signed)listeFichiers.size(); ++j)
-				cerr << "\t" << listeFichiers.at(j) << endl;
-		}
+			analyse->nb_scenario++;
 
-		mesSimulations.push_back(construction_simulation(listeFichiers));
+			sprintf(nom_dossier,"./DATA_GENERATED/Scenario_%i", analyse->nb_scenario);
+			CreateDirectory(MultiCharToUniChar(nom_dossier), NULL);
+
+
+			// On créé les réplications
+			repliquer(analyse->nb_scenario, parametres->getNbSousReplication(), mesSimulations);
+
+			/*
+			// Récupération des data d'entrées et construction de la simulation
+			for(int j = 0; j < parametres->getNbSousReplication(); ++j)
+			{
+				sprintf(nom_dossier,"./DATA_GENERATED/Scenatio_%i/Simul_%i/*", analyse->nb_scenario, j + 1);
+				listeFichiers = liste_fichiers_du_dossier(nom_dossier);
+		
+				// Affichage de la liste des fichiers d'entrée
+				if(listeFichiers.empty())
+				{
+					cerr << endl << "Fichiers d'entree de la simulation " << j + 1 << " :" << endl;
+					cerr << "\t" << "Dossier EMPTY" << endl;
+				}
+				else
+				{
+					cerr << endl << "Fichiers d'entree de la simulation " << j + 1 << " :" << endl;
+					for(int k = 0; j < (signed)listeFichiers.size(); ++k)
+						cerr << "\t" << listeFichiers.at(k) << endl;
+				}
+
+				mesSimulations.push_back(construction_simulation(listeFichiers));
+			}
+			*/
+		}
+		analyse->intervalle_de_confiance++;
+		//Calcul des nouveaux résultats
+
 	}
 	
 	// Affichage du résultat de la simulation
@@ -91,14 +141,40 @@ int main()
 	cerr << endl << endl;
 
 	cerr << endl << "how are you?" << endl;
+
+	// Arret de la mesure
+	end = clock();
+	elapsed = ((double)end - start) / CLOCKS_PER_SEC; /* Conversion en seconde  */
+    
+    cout << endl << "Ce programme s'est execute en " << elapsed << " secondes." << endl;
 	
 	system("pause");
 	
 	return 0;
 }
 
+/*
+x correspond à la couleur du texte
+y correspond à la couleur de fond
 
-
+les valeurs:
+0: noir
+1: bleu foncé
+2: vert
+3: bleu-gris
+4: marron
+5: pourpre
+6: kaki
+7: gris clair
+8: gris
+9: bleu
+10: vert fluo
+11: turquoise
+12: rouge
+13: rose fluo
+14: jaune fluo
+15: blanc 
+*/
 
 
 

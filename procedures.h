@@ -24,15 +24,15 @@ using namespace std;
 
 void lancer_menu();
 
-void simuler(int, vector<Simulation>);
+void repliquer(int, int, vector<Simulation>);
 
-void creer_simulation(int, vector<Simulation>);
+void creer_replication(int, int, vector<Simulation>);
 
-void creer_dossier_simul(int);
+void creer_dossier_replication(int, int);
 
 vector < list<int> > calculer_strategie(vector<Simulation>);
 
-void creer_fichiers(int, vector<Simulation>, vector < list<int> >);
+void creer_fichiers(int, int, vector<Simulation>, vector < list<int> >);
 
 vector<string> liste_fichiers_du_dossier(char *);
 
@@ -47,5 +47,7 @@ long lancer_flot_max(string);
 LPCWSTR MultiCharToUniChar(char*);
 
 string UniCharToMultiChar(wchar_t*);
+
+void Color(int, int);
 
 #endif
