@@ -16,7 +16,7 @@
 
 #include <time.h>
 
-#include "Simulation.h"
+#include "Replication.h"
 #include "Parametres.h"
 
 
@@ -24,23 +24,23 @@ using namespace std;
 
 void lancer_menu();
 
-void repliquer(int, int, vector<Simulation>);
+void repliquer(int, int, Replication);
 
-void creer_replication(int, int, vector<Simulation>);
+void creer_replication(int, int, Replication);
 
 void creer_dossier_replication(int, int);
 
-vector < list<int> > calculer_strategie(vector<Simulation>);
+vector < list<int> > calculer_strategie(Replication);
 
-void creer_fichiers(int, int, vector<Simulation>, vector < list<int> >);
+void creer_fichiers(int, int, Replication, vector < list<int> >);
 
 vector<string> liste_fichiers_du_dossier(char *);
 
-Simulation construction_simulation(vector<string>);
+Replication construction_replication(vector<string>);
 
 Creneau_horaire * parserFichier(string);
 
-void afficher_simulation(Simulation);
+void afficher_replication(Replication);
 
 long lancer_flot_max(string);
 

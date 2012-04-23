@@ -1,65 +1,23 @@
 #include "procedures.h"
 
 
-void lancer_menu()
-{
-	int nb_solutions = -1;
-	int strategie = -1;
-	bool menu_valide = false;
 
-	cerr << "Bonjour et bienvenue :)" << endl << endl << endl;
-	cerr << "\tCombien de simulation(s) voulez-vous generer ?! ";
-	cin >> nb_solutions;
-	
-	while(!menu_valide)
-	{
-		cerr << "\tVoulez-vous avancer (0), retarder (1), aleatoirer (2) ?! ";
-		cin >> strategie;
-		if(strategie == 0 || strategie == 1 || strategie == 2)
-		{
-			menu_valide = true;
-		}
-	}
-
-
-	switch(strategie)
-	{
-		case 0:
-			cerr << endl << "Vous avez choisi de tester une strategie d'avancement\nsur un echantillon de " << nb_solutions << " simulations." << endl;
-			break;
-
-		case 1:
-			cerr << endl << "Vous avez choisi de tester une strategie de retardement\nsur un echantillon de " << nb_solutions << " simulations." << endl;
-			break;
-
-		case 2:
-			cerr << endl << "Vous avez choisi de tester une strategie aléatoire\nsur un echantillon de " << nb_solutions << " simulations." << endl;
-			break;
-
-		default: break;
-	}
-
-	system("pause");
-}
-
-
-
-void repliquer(int num_scenario, int nb_simul, vector<Simulation> mesSimulations)
+void repliquer(int num_scenario, int nb_replication, Replication maReplicationMere)
 {
 	/* initialize random seed: */
 	srand((unsigned int)time(NULL));
 
-	for(int i = 0; i < nb_simul; ++i)
+	for(int i = 0; i < nb_replication; ++i)
 	{
-		creer_replication(num_scenario, i, mesSimulations);
+		creer_replication(num_scenario, i, maReplicationMere);
 	}
 }
 
 
-void creer_replication(int num_scenatio, int iPos, vector<Simulation> mesSimulations)
+void creer_replication(int num_scenatio, int iPos, Replication maReplicationMere)
 {
 	creer_dossier_replication(num_scenatio, iPos);
-	creer_fichiers(num_scenatio, iPos, mesSimulations, calculer_strategie(mesSimulations));
+	creer_fichiers(num_scenatio, iPos, maReplicationMere, calculer_strategie(maReplicationMere));
 }
 
 
@@ -77,13 +35,13 @@ void creer_dossier_replication(int num_scenario, int iPos)
 
 
 // Fonction qui construit une matrice de la population de la simulation initiale et qui retourne une nouvelle matrice.
-vector < list<int> > calculer_strategie(vector<Simulation> mesSimulations)
+vector < list<int> > calculer_strategie(Replication maReplicationMere)
 {
 	static int compteur = 0;
 	compteur++;
 	cerr << endl << endl;
 	cerr << "//////////////////////////////////" << endl;
-	cerr << "/////////// Simul_" << compteur << " //////////////" << endl;
+	cerr << "//////// Replication_" << compteur << " //////////" << endl;
 	cerr << "//////////////////////////////////" << endl;
 	cerr << endl << endl;
 
@@ -110,30 +68,30 @@ vector < list<int> > calculer_strategie(vector<Simulation> mesSimulations)
 	vector<int> nb_personne_par_bat;
 
 	//Déclaration de mon tableau
-	monTab = new int* [mesSimulations.at(0).getMax_batiment()];
-	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
-		monTab[i] = new int [mesSimulations.at(0).getCreneau_horaire().size()];
+	monTab = new int* [maReplicationMere.getMax_batiment()];
+	for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
+		monTab[i] = new int [maReplicationMere.getCreneau_horaire().size()];
 	
 	//Remplissage de mon tableau
 		//Initialisation à 0
-	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
-		for (int j = 0; j < (signed)mesSimulations.at(0).getCreneau_horaire().size(); ++j)
+	for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
+		for (int j = 0; j < (signed)maReplicationMere.getCreneau_horaire().size(); ++j)
 			monTab[i][j] = 0;
 
 		//Remplissage réel
 	int indice = -1;
-	for (int i = 0; i < (signed)mesSimulations.at(0).getCreneau_horaire().size(); ++i)
-		for (int j = 0; j < (signed)mesSimulations.at(0).getCreneau_horaire().at(i)->batiment.size(); ++j)
+	for (int i = 0; i < (signed)maReplicationMere.getCreneau_horaire().size(); ++i)
+		for (int j = 0; j < (signed)maReplicationMere.getCreneau_horaire().at(i)->batiment.size(); ++j)
 		{
-			indice = mesSimulations.at(0).indice(mesSimulations.at(0).getCreneau_horaire().at(i)->batiment.at(j)->numero_batiment);
-			monTab[indice][i] = mesSimulations.at(0).getCreneau_horaire().at(i)->batiment.at(j)->population;
+			indice = maReplicationMere.indice(maReplicationMere.getCreneau_horaire().at(i)->batiment.at(j)->numero_batiment);
+			monTab[indice][i] = maReplicationMere.getCreneau_horaire().at(i)->batiment.at(j)->population;
 		}
 
 	int somme;
-	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
+	for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
 	{
 		somme = 0;
-		for (int j = 0; j < (signed)mesSimulations.at(0).getCreneau_horaire().size(); ++j)
+		for (int j = 0; j < (signed)maReplicationMere.getCreneau_horaire().size(); ++j)
 			somme += monTab[i][j];
 		nb_personne_par_bat.push_back(somme);
 	}
@@ -142,10 +100,10 @@ vector < list<int> > calculer_strategie(vector<Simulation> mesSimulations)
 	//	cerr << "\n" << nb_personne_par_bat.at(i);
 
 	//Affichage de mon tableau
-	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
+	for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
 	{
 		cout << endl << "\t";
-		for (int j = 0; j < (signed)mesSimulations.at(0).getCreneau_horaire().size(); ++j)
+		for (int j = 0; j < (signed)maReplicationMere.getCreneau_horaire().size(); ++j)
 			cout << "\t" << monTab[i][j];
 	}
 	cout << endl << endl;
@@ -156,11 +114,11 @@ vector < list<int> > calculer_strategie(vector<Simulation> mesSimulations)
 	float ** anticipation;
 
 	//Déclaration de mon tableau
-	anticipation = new float* [mesSimulations.at(0).getMax_batiment()];
-	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
+	anticipation = new float* [maReplicationMere.getMax_batiment()];
+	for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
 		anticipation[i] = new float [amplitude_avant + 1];
 	
-	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
+	for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
 	{
 		ratio = (float)(rand() % 100);
 		cout << "Ratio d'anticipation du batiment " << i << " : " << ratio << "%" << endl;
@@ -177,11 +135,11 @@ vector < list<int> > calculer_strategie(vector<Simulation> mesSimulations)
 		}
 	}
 
-	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
+	for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
 		for (int j = 0; j < amplitude_avant + 1; ++j)
 			anticipation[i][j + 1] = anticipation[i][j] + anticipation[i][j + 1];
 	
-	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
+	for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
 	{
 		cout << endl << "\t";
 		for (int j = 0; j < amplitude_avant + 1; ++j)
@@ -194,12 +152,12 @@ vector < list<int> > calculer_strategie(vector<Simulation> mesSimulations)
 	float ** retardement;
 
 	//Déclaration de mon tableau
-	retardement = new float* [mesSimulations.at(0).getMax_batiment()];
-	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
+	retardement = new float* [maReplicationMere.getMax_batiment()];
+	for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
 		retardement[i] = new float [amplitude_arriere + 1];
 	
 
-	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
+	for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
 	{
 		ratio = (float)(rand() % 100);
 		cout << "Ratio de retardement du batiment " << i << " : " << ratio << "%" << endl;
@@ -216,11 +174,11 @@ vector < list<int> > calculer_strategie(vector<Simulation> mesSimulations)
 		}
 	}
 
-	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
+	for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
 		for (int j = 0; j < amplitude_arriere + 1; ++j)
 			retardement[i][j + 1] = retardement[i][j] + retardement[i][j + 1];
 
-	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
+	for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
 	{
 		cout << endl << "\t";
 		for (int j = 0; j < amplitude_arriere + 1; ++j)
@@ -233,23 +191,23 @@ vector < list<int> > calculer_strategie(vector<Simulation> mesSimulations)
 	float ** monTabSolution;
 
 	//Déclaration de mon tableau
-	monTabSolution = new float* [mesSimulations.at(0).getMax_batiment()];
-	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
-		monTabSolution[i] = new float [mesSimulations.at(0).getCreneau_horaire().size() + amplitude_avant + amplitude_arriere]; //TAILLE DU TABLEAU ADAPTEE
+	monTabSolution = new float* [maReplicationMere.getMax_batiment()];
+	for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
+		monTabSolution[i] = new float [maReplicationMere.getCreneau_horaire().size() + amplitude_avant + amplitude_arriere]; //TAILLE DU TABLEAU ADAPTEE
 
 
 	//Initialisation à 0
-	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
-		for (int j = 0; j < (signed)mesSimulations.at(0).getCreneau_horaire().size() + amplitude_avant + amplitude_arriere; ++j)
+	for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
+		for (int j = 0; j < (signed)maReplicationMere.getCreneau_horaire().size() + amplitude_avant + amplitude_arriere; ++j)
 			monTabSolution[i][j] = 0;
 	
 	//Remplissage de mon tableau
 	int tempo = 0;
-	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
+	for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
 	{
-		for (int j = 0; j < (signed)mesSimulations.at(0).getCreneau_horaire().size(); ++j)
+		for (int j = 0; j < (signed)maReplicationMere.getCreneau_horaire().size(); ++j)
 		{
-			for(int k = 0; k < (signed)mesSimulations.at(0).getCreneau_horaire().at(j)->batiment.at(i)->population; ++k)
+			for(int k = 0; k < (signed)maReplicationMere.getCreneau_horaire().at(j)->batiment.at(i)->population; ++k)
 			{
 				//GERER CAS ALEATOIRE
 				tempo = strategie;
@@ -290,19 +248,19 @@ vector < list<int> > calculer_strategie(vector<Simulation> mesSimulations)
 		}
 	}
 
-	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
-		for (int j = 0; j < (signed)mesSimulations.at(0).getCreneau_horaire().size() + amplitude_avant + amplitude_arriere; ++j)
+	for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
+		for (int j = 0; j < (signed)maReplicationMere.getCreneau_horaire().size() + amplitude_avant + amplitude_arriere; ++j)
 			monTabSolution[i][j] = monTabSolution[i][j] / nb_personne_par_bat.at(i);
 
-	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
-		for (int j = 0; j < (signed)mesSimulations.at(0).getCreneau_horaire().size() + amplitude_avant + amplitude_arriere; ++j)
+	for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
+		for (int j = 0; j < (signed)maReplicationMere.getCreneau_horaire().size() + amplitude_avant + amplitude_arriere; ++j)
 			monTabSolution[i][j + 1] = monTabSolution[i][j] + monTabSolution[i][j + 1];
 
 	
-	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
+	for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
 	{
 		cout << endl << "\t";
-		for (int j = 0; j < (signed)mesSimulations.at(0).getCreneau_horaire().size() + amplitude_avant + amplitude_arriere; ++j)
+		for (int j = 0; j < (signed)maReplicationMere.getCreneau_horaire().size() + amplitude_avant + amplitude_arriere; ++j)
 			cout << "\t" << monTabSolution[i][j];
 	}
 	cout << endl << endl;
@@ -313,13 +271,13 @@ vector < list<int> > calculer_strategie(vector<Simulation> mesSimulations)
 	int ** maPopulation;
 
 	//Déclaration de mon tableau
-	maPopulation = new int* [mesSimulations.at(0).getMax_batiment()];
-	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
-		maPopulation[i] = new int [mesSimulations.at(0).getCreneau_horaire().size() + amplitude_avant + amplitude_arriere];
+	maPopulation = new int* [maReplicationMere.getMax_batiment()];
+	for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
+		maPopulation[i] = new int [maReplicationMere.getCreneau_horaire().size() + amplitude_avant + amplitude_arriere];
 
 	//Initialisation à 0
-	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
-		for (int j = 0; j < (signed)mesSimulations.at(0).getCreneau_horaire().size() + amplitude_avant + amplitude_arriere; ++j)
+	for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
+		for (int j = 0; j < (signed)maReplicationMere.getCreneau_horaire().size() + amplitude_avant + amplitude_arriere; ++j)
 			maPopulation[i][j] = 0;
 
 	
@@ -330,7 +288,7 @@ vector < list<int> > calculer_strategie(vector<Simulation> mesSimulations)
 
 
 	//Calcul de ma nouvelle stratégie
-	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
+	for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
 	{
 		for(int j = 0; j < nb_personne_par_bat.at(i); ++j)
 		{
@@ -358,12 +316,12 @@ vector < list<int> > calculer_strategie(vector<Simulation> mesSimulations)
 
 
 
-	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
+	for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
 	{
 		list<int> maListe;
 		monVector.push_back(maListe);
 
-		for (int j = 0; j < (signed)mesSimulations.at(0).getCreneau_horaire().size() + amplitude_avant + amplitude_arriere; ++j)
+		for (int j = 0; j < (signed)maReplicationMere.getCreneau_horaire().size() + amplitude_avant + amplitude_arriere; ++j)
 		{
 			monVector.at(i).push_back(maPopulation[i][j]);
 		}
@@ -382,7 +340,7 @@ vector < list<int> > calculer_strategie(vector<Simulation> mesSimulations)
 	return monVector;
 }
 
-void creer_fichiers(int num_scenario, int iPos, vector<Simulation> mesSimulations, vector < list<int> > monVector)
+void creer_fichiers(int num_scenario, int iPos, Replication maReplicationMere, vector < list<int> > monVector)
 {
 	Parametres * parametres;
 	parametres = Parametres::getInstance();
@@ -391,7 +349,7 @@ void creer_fichiers(int num_scenario, int iPos, vector<Simulation> mesSimulation
 
 	int cas = parametres->getStrategie();
 
-	int nb_creneau_simul_mere = mesSimulations.at(0).getCreneau_horaire().size();
+	int nb_creneau_simul_mere = maReplicationMere.getCreneau_horaire().size();
 	int nb_creneau_simul_cree = monVector.at(0).size();
 	int nb_creneau_simul_diff = abs(nb_creneau_simul_mere - nb_creneau_simul_cree);
 	int tempo = nb_creneau_simul_mere;
@@ -414,30 +372,30 @@ void creer_fichiers(int num_scenario, int iPos, vector<Simulation> mesSimulation
 				if(nb_creneau_simul_diff > 0) // ON AVANCE ET Y'A DES CRENEAUX EN PLUS
 				{
 					//cerr << "ANTICIPE " << i << endl;
-					fichier << mesSimulations.at(0).getCreneau_horaire().at(0)->debut;
+					fichier << maReplicationMere.getCreneau_horaire().at(0)->debut;
 			
-					for(int j = 0; j < (signed)mesSimulations.at(0).getMax_batiment(); ++j)
+					for(int j = 0; j < (signed)maReplicationMere.getMax_batiment(); ++j)
 					{
-						fichier << "a " << mesSimulations.at(0).getCreneau_horaire().at(0)->sommet_initial << " " << mesSimulations.at(0).getTableau_batiment().at(j) << " " << monVector.at(j).front() << endl;
+						fichier << "a " << maReplicationMere.getCreneau_horaire().at(0)->sommet_initial << " " << maReplicationMere.getTableau_batiment().at(j) << " " << monVector.at(j).front() << endl;
 						monVector.at(j).pop_front();
 					}
 
-					fichier << mesSimulations.at(0).getCreneau_horaire().at(0)->fin;
+					fichier << maReplicationMere.getCreneau_horaire().at(0)->fin;
 
 					nb_creneau_simul_diff--;
 				}
 				else
 				{
 					//cerr << "NORMAL " << i << endl;
-					fichier << mesSimulations.at(0).getCreneau_horaire().at(i - abs(nb_creneau_simul_mere - nb_creneau_simul_cree))->debut;
+					fichier << maReplicationMere.getCreneau_horaire().at(i - abs(nb_creneau_simul_mere - nb_creneau_simul_cree))->debut;
 			
-					for(int j = 0; j < (signed)mesSimulations.at(0).getMax_batiment(); ++j)
+					for(int j = 0; j < (signed)maReplicationMere.getMax_batiment(); ++j)
 					{
-						fichier << "a " << mesSimulations.at(0).getCreneau_horaire().at(i - abs(nb_creneau_simul_mere - nb_creneau_simul_cree))->sommet_initial << " " << mesSimulations.at(0).getTableau_batiment().at(j) << " " << monVector.at(j).front() << endl;
+						fichier << "a " << maReplicationMere.getCreneau_horaire().at(i - abs(nb_creneau_simul_mere - nb_creneau_simul_cree))->sommet_initial << " " << maReplicationMere.getTableau_batiment().at(j) << " " << monVector.at(j).front() << endl;
 						monVector.at(j).pop_front();
 					}
 
-					fichier << mesSimulations.at(0).getCreneau_horaire().at(i - abs(nb_creneau_simul_mere - nb_creneau_simul_cree))->fin;
+					fichier << maReplicationMere.getCreneau_horaire().at(i - abs(nb_creneau_simul_mere - nb_creneau_simul_cree))->fin;
 				}
 			}
 			else if(cas == 1) // ON RETARDE
@@ -445,30 +403,30 @@ void creer_fichiers(int num_scenario, int iPos, vector<Simulation> mesSimulation
 				if(tempo > 0)
 				{
 					cerr << "NORMAL " << i << endl;
-					fichier << mesSimulations.at(0).getCreneau_horaire().at(i - abs(nb_creneau_simul_mere - nb_creneau_simul_cree))->debut;
+					fichier << maReplicationMere.getCreneau_horaire().at(i - abs(nb_creneau_simul_mere - nb_creneau_simul_cree))->debut;
 			
-					for(int j = 0; j < (signed)mesSimulations.at(0).getMax_batiment(); ++j)
+					for(int j = 0; j < (signed)maReplicationMere.getMax_batiment(); ++j)
 					{
-						fichier << "a " << mesSimulations.at(0).getCreneau_horaire().at(i - abs(nb_creneau_simul_mere - nb_creneau_simul_cree))->sommet_initial << " " << mesSimulations.at(0).getTableau_batiment().at(j) << " " << monVector.at(j).front() << endl;
+						fichier << "a " << maReplicationMere.getCreneau_horaire().at(i - abs(nb_creneau_simul_mere - nb_creneau_simul_cree))->sommet_initial << " " << maReplicationMere.getTableau_batiment().at(j) << " " << monVector.at(j).front() << endl;
 						monVector.at(j).pop_front();
 					}
 
-					fichier << mesSimulations.at(0).getCreneau_horaire().at(i - abs(nb_creneau_simul_mere - nb_creneau_simul_cree))->fin;
+					fichier << maReplicationMere.getCreneau_horaire().at(i - abs(nb_creneau_simul_mere - nb_creneau_simul_cree))->fin;
 
 					tempo--;
 				}
 				else if(nb_creneau_simul_diff > 0) // ON RETARDE ET Y'A DES CRENEAUX EN PLUS
 				{
 					cerr << "RETARDE " << i << endl;
-					fichier << mesSimulations.at(0).getCreneau_horaire().at(mesSimulations.at(0).getCreneau_horaire().size())->debut;
+					fichier << maReplicationMere.getCreneau_horaire().at(maReplicationMere.getCreneau_horaire().size())->debut;
 			
-					for(int j = 0; j < (signed)mesSimulations.at(0).getMax_batiment(); ++j)
+					for(int j = 0; j < (signed)maReplicationMere.getMax_batiment(); ++j)
 					{
-						fichier << "a " << mesSimulations.at(0).getCreneau_horaire().at(mesSimulations.at(0).getCreneau_horaire().size())->sommet_initial << " " << mesSimulations.at(0).getTableau_batiment().at(j) << " " << monVector.at(j).front() << endl;
+						fichier << "a " << maReplicationMere.getCreneau_horaire().at(maReplicationMere.getCreneau_horaire().size())->sommet_initial << " " << maReplicationMere.getTableau_batiment().at(j) << " " << monVector.at(j).front() << endl;
 						monVector.at(j).pop_front();
 					}
 
-					fichier << mesSimulations.at(0).getCreneau_horaire().at(mesSimulations.at(0).getCreneau_horaire().size())->fin;
+					fichier << maReplicationMere.getCreneau_horaire().at(maReplicationMere.getCreneau_horaire().size())->fin;
 
 					nb_creneau_simul_diff--;
 				}
@@ -509,26 +467,26 @@ vector<string> liste_fichiers_du_dossier(char * path)
 }
 
 
-Simulation construction_simulation(vector<string> listeFichiers)
+Replication construction_replication(vector<string> listeFichiers)
 {
-	Simulation maSimulation;
+	Replication maReplication;
 
 	for (int i = 0; i < (signed)listeFichiers.size(); i++)
-		maSimulation.setCreneauHoraire(parserFichier(listeFichiers.at(i)));
+		maReplication.setCreneauHoraire(parserFichier(listeFichiers.at(i)));
 	
 	//maSimulation.getCreneau_horaire().at(maSimulation.getCreneau_horaire().size() - 1)->batiment.size()
-	for (int i = 0; i < (signed)maSimulation.getCreneau_horaire().size(); i++)
-		if(maSimulation.getSimulationValide() == true)
-			if(maSimulation.getCreneau_horaire().at(i)->valide == false)
-				maSimulation.setValide(false);
+	for (int i = 0; i < (signed)maReplication.getCreneau_horaire().size(); i++)
+		if(maReplication.getSimulationValide() == true)
+			if(maReplication.getCreneau_horaire().at(i)->valide == false)
+				maReplication.setValide(false);
 
 	//Je mets à jour le nombre max de batiment
-	for(int j = 0; j < (signed)maSimulation.getCreneau_horaire().size(); ++j)
-		for(int k = 0; k < (signed)maSimulation.getCreneau_horaire().at(j)->batiment.size(); ++k)
-			if(!maSimulation.contenir(maSimulation.getCreneau_horaire().at(j)->batiment.at(k)->numero_batiment))
+	for(int j = 0; j < (signed)maReplication.getCreneau_horaire().size(); ++j)
+		for(int k = 0; k < (signed)maReplication.getCreneau_horaire().at(j)->batiment.size(); ++k)
+			if(!maReplication.contenir(maReplication.getCreneau_horaire().at(j)->batiment.at(k)->numero_batiment))
 			{
-				maSimulation.setTableau_batiment(maSimulation.getCreneau_horaire().at(j)->batiment.at(k)->numero_batiment);
-				maSimulation.incrementer_compteur_batiment();
+				maReplication.setTableau_batiment(maReplication.getCreneau_horaire().at(j)->batiment.at(k)->numero_batiment);
+				maReplication.incrementer_compteur_batiment();
 			}
 
 	/*
@@ -536,7 +494,7 @@ Simulation construction_simulation(vector<string> listeFichiers)
 		cerr << "Batiment n " << i << " : " << maSimulation.getTableau_batiment().at(i) << endl;
 	*/
 
-	return maSimulation;
+	return maReplication;
 }
 
 
@@ -671,12 +629,12 @@ Creneau_horaire * parserFichier(string fichier)
 
 
 
-void afficher_simulation(Simulation simulation)
+void afficher_replication(Replication maReplication)
 {
 	cerr << endl << "----------------------------------------------" << endl;
 	cerr << "AFFICHAGE DE LA SIMULATION" << endl << endl;
 
-	if (simulation.getSimulationValide())
+	if (maReplication.getSimulationValide())
 	{
 		cerr << "\tLa simulation est VALIDE" << endl << endl;
 	}
@@ -685,12 +643,12 @@ void afficher_simulation(Simulation simulation)
 		cerr << "\tLa simulation est INVALIDE" << endl << endl;
 	}
 
-	cerr << "Cette simulation contient " << simulation.getCreneau_horaire().size() << " creneaux horaires." << endl;
+	cerr << "Cette simulation contient " << maReplication.getCreneau_horaire().size() << " creneaux horaires." << endl;
 
-	for (int i = 0; i < (signed)simulation.getCreneau_horaire().size(); i++)
+	for (int i = 0; i < (signed)maReplication.getCreneau_horaire().size(); i++)
 	{
 		cerr << endl << endl << "\tCreneau n " << i + 1 << endl;
-		if(simulation.getCreneau_horaire().at(i)->valide == true)
+		if(maReplication.getCreneau_horaire().at(i)->valide == true)
 		{
 			cerr << "\t\tCreneau : VALIDE" << endl << endl;
 		}
@@ -699,15 +657,15 @@ void afficher_simulation(Simulation simulation)
 			cerr << "\t\tCreneau : INVALIDE" << endl << endl;
 		}
 
-		cerr << "\t\tSommet initial : " << simulation.getCreneau_horaire().at(i)->sommet_initial << endl;
-		cerr << "\t\tSommet final : " << simulation.getCreneau_horaire().at(i)->sommet_terminal << endl << endl;
+		cerr << "\t\tSommet initial : " << maReplication.getCreneau_horaire().at(i)->sommet_initial << endl;
+		cerr << "\t\tSommet final : " << maReplication.getCreneau_horaire().at(i)->sommet_terminal << endl << endl;
 
-		cerr << "\t\tValeur de Flot Max : " << simulation.getCreneau_horaire().at(i)->flow_max << endl << endl;
+		cerr << "\t\tValeur de Flot Max : " << maReplication.getCreneau_horaire().at(i)->flow_max << endl << endl;
 
 		cerr << "\t\tListe des batiments : " << endl;
-		for (int j = 0; j < (signed)simulation.getCreneau_horaire().at(i)->batiment.size(); j++)
+		for (int j = 0; j < (signed)maReplication.getCreneau_horaire().at(i)->batiment.size(); j++)
 		{
-			cerr << "\t\t\tBatiment n " << simulation.getCreneau_horaire().at(i)->batiment.at(j)->numero_batiment << " : " << simulation.getCreneau_horaire().at(i)->batiment.at(j)->population << " personnes" << endl;
+			cerr << "\t\t\tBatiment n " << maReplication.getCreneau_horaire().at(i)->batiment.at(j)->numero_batiment << " : " << maReplication.getCreneau_horaire().at(i)->batiment.at(j)->population << " personnes" << endl;
 		}
 	}
 

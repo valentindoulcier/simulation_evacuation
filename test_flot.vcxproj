@@ -94,12 +94,14 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Parametres.cpp" />
     <ClCompile Include="Procedures.cpp" />
-    <ClCompile Include="Simulation.cpp" />
+    <ClCompile Include="Replication.cpp" />
+    <ClCompile Include="Scenario.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Parametres.h" />
     <ClInclude Include="Procedures.h" />
-    <ClInclude Include="Simulation.h" />
+    <ClInclude Include="Replication.h" />
+    <ClInclude Include="Scenario.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

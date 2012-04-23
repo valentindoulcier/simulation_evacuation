@@ -27,8 +27,8 @@ public:
 	void validationDataEntrees();
 	void afficherParametres();
 
-	void setNbSousReplication(int);
-	int getNbSousReplication();
+	void setNbReplication(int);
+	int getNbReplication();
 
 	void setIntervalleConfiance(int);
 	int getIntervalleConfiance();

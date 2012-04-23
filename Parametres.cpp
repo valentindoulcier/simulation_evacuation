@@ -21,12 +21,12 @@ Parametres * Parametres::getInstance ()
 }
 
 
-void Parametres::setNbSousReplication(int nb)
+void Parametres::setNbReplication(int nb)
 {
 	nb_sous_replication = nb;
 }
 
-int Parametres::getNbSousReplication()
+int Parametres::getNbReplication()
 {
 	return nb_sous_replication;
 }

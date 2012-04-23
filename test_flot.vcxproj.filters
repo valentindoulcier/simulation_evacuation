@@ -18,24 +18,30 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Simulation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Parametres.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Procedures.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Replication.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenario.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Simulation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Parametres.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Procedures.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Replication.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenario.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

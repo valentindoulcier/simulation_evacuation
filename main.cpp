@@ -1,6 +1,7 @@
 #include "procedures.h"
-#include "Simulation.h"
+#include "Replication.h"
 #include "Parametres.h"
+#include "Scenario.h"
 
 #include "time.h"
 
@@ -11,6 +12,8 @@ typedef struct _Analyse
 {
 	int nb_scenario;
 	int intervalle_de_confiance;
+	vector<float> moyenne;
+
 } Analyse;
 
 
@@ -45,9 +48,9 @@ int main()
 
 	vector<string> listeFichiers;
 
-	vector<Simulation> mesSimulations;
+	Replication maReplicationMere;
 
-	//lancer_menu();
+	vector<Scenario> mesScenarios;
 
 	cerr << endl;
 	cerr << "\t////////////////////////////////////////////////////////////////" << endl;
@@ -57,7 +60,7 @@ int main()
 
 	// Récupération des data d'entrées et construction de la simulation
 	listeFichiers = liste_fichiers_du_dossier("./DATA_SOURCE/*");
-	mesSimulations.push_back(construction_simulation(listeFichiers));
+	maReplicationMere = construction_replication(listeFichiers);
 
 	// Affichage de la liste des fichiers d'entrée
 	cerr << "Fichiers d'entree de la simulation mere :" << endl;
@@ -66,11 +69,9 @@ int main()
 	cerr << endl;
 
 	// Affichage du résultat de la simulation initiale
-	for (int i = 0; i < (signed)mesSimulations.size(); i++)
-		afficher_simulation(mesSimulations.at(i));
+	afficher_replication(maReplicationMere);
 
 	listeFichiers.clear();
-
 
 
 
@@ -81,13 +82,17 @@ int main()
 	cerr << "\t////////////////////////////////////////////////////////////////" << endl;
 	cerr << endl << endl;
 
-	char nom_dossier[41];
+	char nom_dossier[50];
 
 
 	while(parametres->getIntervalleConfiance() > analyse->intervalle_de_confiance)
 	{
 		for(int i = 0; i < 5; ++i)
 		{
+			Scenario tempo;
+			float somme = 0;
+			//tempo.getReplications().clear();
+
 			analyse->nb_scenario++;
 
 			sprintf(nom_dossier,"./DATA_GENERATED/Scenario_%i", analyse->nb_scenario);
@@ -95,13 +100,13 @@ int main()
 
 
 			// On créé les réplications
-			repliquer(analyse->nb_scenario, parametres->getNbSousReplication(), mesSimulations);
+			repliquer(analyse->nb_scenario, parametres->getNbReplication(), maReplicationMere);
 
-			/*
+			
 			// Récupération des data d'entrées et construction de la simulation
-			for(int j = 0; j < parametres->getNbSousReplication(); ++j)
+			for(int j = 0; j < parametres->getNbReplication(); ++j)
 			{
-				sprintf(nom_dossier,"./DATA_GENERATED/Scenatio_%i/Simul_%i/*", analyse->nb_scenario, j + 1);
+				sprintf(nom_dossier,"./DATA_GENERATED/Scenario_%i/Replication_%i/*", analyse->nb_scenario, j + 1);
 				listeFichiers = liste_fichiers_du_dossier(nom_dossier);
 		
 				// Affichage de la liste des fichiers d'entrée
@@ -112,25 +117,43 @@ int main()
 				}
 				else
 				{
-					cerr << endl << "Fichiers d'entree de la simulation " << j + 1 << " :" << endl;
-					for(int k = 0; j < (signed)listeFichiers.size(); ++k)
+					cerr << endl << "Fichiers d'entree de la replication " << j + 1 << " :" << endl;
+					for(int k = 0; k < (signed)listeFichiers.size(); ++k)
+					{
 						cerr << "\t" << listeFichiers.at(k) << endl;
+					}
 				}
-
-				mesSimulations.push_back(construction_simulation(listeFichiers));
+				tempo.getReplications().push_back(construction_replication(listeFichiers));
 			}
-			*/
+			/*for(int  cpt =0; cpt < parametres->getNbReplication() ; ++cpt)
+			{
+				if(tempo.getReplications().at(cpt).getSimulationValide())
+					somme++;
+			}*/
+			//push back du scenario tempo
+			//tempo.setMoyenne(somme/= parametres->getNbReplication());
+			mesScenarios.push_back(tempo);
+			
 		}
+		/*
+		float moyenne=0;
+		for(int cpt = analyse->nb_scenario; cpt > analyse->nb_scenario-5; --cpt)
+		{
+			moyenne+= mesScenarios.at(cpt).getMoyenne();
+		}
+		moyenne /=5;
+
+		analyse->moyenne.push_back(moyenne);
+		*/
 		analyse->intervalle_de_confiance++;
 		//Calcul des nouveaux résultats
 
 	}
 	
-	// Affichage du résultat de la simulation
-	for (int i = 1; i < (signed)mesSimulations.size(); i++)
-		afficher_simulation(mesSimulations.at(i));
-		
 
+	// Affichage du résultat de la simulation
+	//for (int i = 1; i < (signed)mesSimulations.size(); i++)
+	//	afficher_replication(mesSimulations.at(i));
 
 
 
@@ -144,10 +167,10 @@ int main()
 
 	// Arret de la mesure
 	end = clock();
-	elapsed = ((double)end - start) / CLOCKS_PER_SEC; /* Conversion en seconde  */
+	elapsed = ((double)end - start) / CLOCKS_PER_SEC; // Conversion en seconde 
     
     cout << endl << "Ce programme s'est execute en " << elapsed << " secondes." << endl;
-	
+
 	system("pause");
 	
 	return 0;
