@@ -11,6 +11,11 @@ Scenario::~Scenario(void)
 }
 
 
+void Scenario::setReplications(Replication replic)
+{
+	replications.push_back(replic);
+}
+
 vector<Replication> Scenario::getReplications()
 {
 	return replications;

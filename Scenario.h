@@ -19,6 +19,7 @@ public:
 	Scenario(void);
 	~Scenario(void);
 
+	void setReplications(Replication);
 	vector<Replication> getReplications();
 
 	void setMoyenne(float);

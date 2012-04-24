@@ -91,7 +91,7 @@ int main()
 		{
 			Scenario tempo;
 			float somme = 0;
-			//tempo.getReplications().clear();
+			tempo.getReplications().clear();
 
 			analyse->nb_scenario++;
 
@@ -123,25 +123,25 @@ int main()
 						cerr << "\t" << listeFichiers.at(k) << endl;
 					}
 				}
-				tempo.getReplications().push_back(construction_replication(listeFichiers));
+				tempo.setReplications(construction_replication(listeFichiers));
 			}
-			/*for(int  cpt =0; cpt < parametres->getNbReplication() ; ++cpt)
+
+			for(int cpt = 0; cpt < parametres->getNbReplication(); ++cpt)
 			{
 				if(tempo.getReplications().at(cpt).getSimulationValide())
 					somme++;
-			}*/
-			//push back du scenario tempo
-			//tempo.setMoyenne(somme/= parametres->getNbReplication());
+			}
+			tempo.setMoyenne(somme/parametres->getNbReplication());
 			mesScenarios.push_back(tempo);
 			
 		}
 		/*
 		float moyenne=0;
-		for(int cpt = analyse->nb_scenario; cpt > analyse->nb_scenario-5; --cpt)
+		for(int cpt = analyse->nb_scenario; cpt > analyse->nb_scenario - 5; --cpt)
 		{
-			moyenne+= mesScenarios.at(cpt).getMoyenne();
+			moyenne += mesScenarios.at(cpt).getMoyenne();
 		}
-		moyenne /=5;
+		moyenne /= 5;
 
 		analyse->moyenne.push_back(moyenne);
 		*/

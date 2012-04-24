@@ -41,7 +41,7 @@ vector < list<int> > calculer_strategie(Replication maReplicationMere)
 	compteur++;
 	cerr << endl << endl;
 	cerr << "//////////////////////////////////" << endl;
-	cerr << "//////// Replication_" << compteur << " //////////" << endl;
+	cerr << "///////// Replication_" << compteur << " //////////" << endl;
 	cerr << "//////////////////////////////////" << endl;
 	cerr << endl << endl;
 
