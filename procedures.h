@@ -30,7 +30,7 @@ void creer_replication(int, int, Replication);
 
 void creer_dossier_replication(int, int);
 
-vector < list<int> > calculer_strategie(Replication);
+vector < list<int> > calculer_strategie(int, int, Replication);
 
 void creer_fichiers(int, int, Replication, vector < list<int> >);
 
@@ -41,6 +41,8 @@ Replication construction_replication(vector<string>);
 Creneau_horaire * parserFichier(string);
 
 void afficher_replication(Replication);
+
+void enregistrer_replication(int, int, Replication);
 
 long lancer_flot_max(string);
 

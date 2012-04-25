@@ -36,4 +36,4 @@ c
 c
 c
 c	Mode débugg
-d	0
+d	1

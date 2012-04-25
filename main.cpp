@@ -13,7 +13,6 @@ typedef struct _Analyse
 	int nb_scenario;
 	int intervalle_de_confiance;
 	vector<float> moyenne;
-
 } Analyse;
 
 
@@ -84,16 +83,33 @@ int main()
 
 	char nom_dossier[50];
 
+	if(parametres->getModeDebug())
+	{
+		cout << "\a" << endl;
+		sprintf(nom_dossier,"./DATA_DEBUG/");
+		CreateDirectory(MultiCharToUniChar(nom_dossier), NULL);
+	}
+
+	cerr << "\tGeneration en cours .";
 
 	while(parametres->getIntervalleConfiance() > analyse->intervalle_de_confiance)
 	{
 		for(int i = 0; i < 5; ++i)
 		{
+			cerr << ".";
+
 			Scenario tempo;
+			
 			float somme = 0;
 			tempo.getReplications().clear();
 
 			analyse->nb_scenario++;
+
+			if(parametres->getModeDebug())
+			{
+				sprintf(nom_dossier,"./DATA_DEBUG/Scenario_%i", analyse->nb_scenario);
+				CreateDirectory(MultiCharToUniChar(nom_dossier), NULL);
+			}
 
 			sprintf(nom_dossier,"./DATA_GENERATED/Scenario_%i", analyse->nb_scenario);
 			CreateDirectory(MultiCharToUniChar(nom_dossier), NULL);
@@ -110,19 +126,37 @@ int main()
 				listeFichiers = liste_fichiers_du_dossier(nom_dossier);
 		
 				// Affichage de la liste des fichiers d'entrée
-				if(listeFichiers.empty())
+				if(parametres->getModeDebug())
 				{
-					cerr << endl << "Fichiers d'entree de la simulation " << j + 1 << " :" << endl;
-					cerr << "\t" << "Dossier EMPTY" << endl;
-				}
-				else
-				{
-					cerr << endl << "Fichiers d'entree de la replication " << j + 1 << " :" << endl;
-					for(int k = 0; k < (signed)listeFichiers.size(); ++k)
+					char nom_fichier[50];
+
+					sprintf(nom_fichier,"./DATA_DEBUG/Scenario_%i/Réplication_%i.txt", analyse->nb_scenario, j + 1);
+	
+					ofstream fichier(nom_fichier, ios::out | ios::app);
+ 
+					if(fichier)
 					{
-						cerr << "\t" << listeFichiers.at(k) << endl;
+						fichier << "\nFichiers d'entree de la replication " << j + 1 << " :\n";
+
+						if(listeFichiers.empty())
+						{
+							cerr << "\tDossier EMPTY\n";
+						}
+						else
+						{
+							for(int k = 0; k < (signed)listeFichiers.size(); ++k)
+							{
+								fichier << "\t" << listeFichiers.at(k) << endl;
+							}
+							fichier << "\n\n";
+						}
+
+						fichier.close();
 					}
+					else
+						cerr << "Impossible d'ouvrir le fichier !" << endl;
 				}
+
 				tempo.setReplications(construction_replication(listeFichiers));
 			}
 
@@ -152,8 +186,9 @@ int main()
 	
 
 	// Affichage du résultat de la simulation
-	//for (int i = 1; i < (signed)mesSimulations.size(); i++)
-	//	afficher_replication(mesSimulations.at(i));
+	for(int i = 0; i < (signed)mesScenarios.size(); ++i)
+		for(int j = 0; j < (signed)mesScenarios.at(i).getReplications().size(); ++j)
+			enregistrer_replication(i, j, mesScenarios.at(i).getReplications().at(j));
 
 
 

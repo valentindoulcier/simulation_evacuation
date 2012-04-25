@@ -14,10 +14,10 @@ void repliquer(int num_scenario, int nb_replication, Replication maReplicationMe
 }
 
 
-void creer_replication(int num_scenatio, int iPos, Replication maReplicationMere)
+void creer_replication(int num_scenario, int iPos, Replication maReplicationMere)
 {
-	creer_dossier_replication(num_scenatio, iPos);
-	creer_fichiers(num_scenatio, iPos, maReplicationMere, calculer_strategie(maReplicationMere));
+	creer_dossier_replication(num_scenario, iPos);
+	creer_fichiers(num_scenario, iPos, maReplicationMere, calculer_strategie(num_scenario, iPos, maReplicationMere));
 }
 
 
@@ -35,16 +35,10 @@ void creer_dossier_replication(int num_scenario, int iPos)
 
 
 // Fonction qui construit une matrice de la population de la simulation initiale et qui retourne une nouvelle matrice.
-vector < list<int> > calculer_strategie(Replication maReplicationMere)
+vector < list<int> > calculer_strategie(int num_scenario, int iPos, Replication maReplicationMere)
 {
 	static int compteur = 0;
 	compteur++;
-	cerr << endl << endl;
-	cerr << "//////////////////////////////////" << endl;
-	cerr << "///////// Replication_" << compteur << " //////////" << endl;
-	cerr << "//////////////////////////////////" << endl;
-	cerr << endl << endl;
-
 
 	Parametres * parametres;
 	parametres = Parametres::getInstance();
@@ -61,8 +55,6 @@ vector < list<int> > calculer_strategie(Replication maReplicationMere)
 
 	/* generate secret number: */
 	float chance;
-	
-	cout << "SOLUTION MERE" << endl << endl;
 
 	int ** monTab;
 	vector<int> nb_personne_par_bat;
@@ -99,17 +91,49 @@ vector < list<int> > calculer_strategie(Replication maReplicationMere)
 	//for(int i = 0; i < (signed)nb_personne_par_bat.size(); ++i)
 	//	cerr << "\n" << nb_personne_par_bat.at(i);
 
-	//Affichage de mon tableau
-	for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
+	if(parametres->getModeDebug())
 	{
-		cout << endl << "\t";
-		for (int j = 0; j < (signed)maReplicationMere.getCreneau_horaire().size(); ++j)
-			cout << "\t" << monTab[i][j];
+		char nom_fichier[50];
+
+		sprintf(nom_fichier,"./DATA_DEBUG/Scenario_%i/Réplication_%i.txt", num_scenario, iPos + 1);
+	
+		ofstream fichier(nom_fichier, ios::out | ios::trunc);			// ouverture en écriture avec effacement du fichier ouvert
+ 
+		if(fichier)
+		{
+			fichier << "\n\n";
+			fichier << "\t//////////////////////////////////\n";
+			fichier << "\t/////////// Scénario_" << num_scenario << " ///////////\n";
+			fichier << "\t//////////////////////////////////\n";
+
+			fichier << "\n\n";
+			fichier << "//////////////////////////////////\n";
+			fichier << "///////// Replication_" << iPos + 1 << " //////////\n";
+			fichier << "//////////////////////////////////\n";
+			fichier << "\n\n";
+
+
+			fichier << "\tSOLUTION MERE\n\n";
+
+			//Affichage de mon tableau
+			for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
+			{
+				fichier << "\n\t";
+				for (int j = 0; j < (signed)maReplicationMere.getCreneau_horaire().size(); ++j)
+					fichier << "\t" << monTab[i][j];
+			}
+			fichier << "\n\n\n\n";
+
+			fichier << "\tAMPLITUDE AVANT\n\n";
+
+			fichier.close();
+		}
+		else
+			cerr << "Impossible d'ouvrir le fichier !" << endl;
 	}
-	cout << endl << endl;
 
 
-	//cout << "INTERVALLES" << endl << endl;
+
 
 	float ** anticipation;
 
@@ -121,7 +145,26 @@ vector < list<int> > calculer_strategie(Replication maReplicationMere)
 	for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
 	{
 		ratio = (float)(rand() % 100);
-		cout << "Ratio d'anticipation du batiment " << i << " : " << ratio << "%" << endl;
+
+		if(parametres->getModeDebug())
+		{
+			char nom_fichier[50];
+
+			sprintf(nom_fichier,"./DATA_DEBUG/Scenario_%i/Réplication_%i.txt", num_scenario, iPos + 1);
+	
+			ofstream fichier(nom_fichier, ios::out | ios::app);
+ 
+			if(fichier)
+			{
+				fichier << "\t\tRatio d'anticipation du batiment " << i + 1 << " : " << ratio << "%\n";
+				fichier << "\n";
+
+				fichier.close();
+			}
+			else
+				cerr << "Impossible d'ouvrir le fichier !" << endl;
+		}
+
 		for (int j = amplitude_avant; j >= 0; j--)
 		{
 			if( j == amplitude_avant )
@@ -138,15 +181,33 @@ vector < list<int> > calculer_strategie(Replication maReplicationMere)
 	for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
 		for (int j = 0; j < amplitude_avant + 1; ++j)
 			anticipation[i][j + 1] = anticipation[i][j] + anticipation[i][j + 1];
-	
-	for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
-	{
-		cout << endl << "\t";
-		for (int j = 0; j < amplitude_avant + 1; ++j)
-			cout << "\t" << anticipation[i][j];
-	}
-	cout << endl << endl;
 
+
+	if(parametres->getModeDebug())
+	{
+		char nom_fichier[50];
+
+		sprintf(nom_fichier,"./DATA_DEBUG/Scenario_%i/Réplication_%i.txt", num_scenario, iPos + 1);
+	
+		ofstream fichier(nom_fichier, ios::out | ios::app);
+ 
+		if(fichier)
+		{
+			for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
+			{
+				fichier << "\n\t";
+				for (int j = 0; j < amplitude_avant + 1; ++j)
+					fichier << "\t" << anticipation[i][j];
+			}
+			fichier << "\n\n\n";
+
+			fichier << "\tAMPLITUDE ARRIERE\n\n";
+
+			fichier.close();
+		}
+		else
+			cerr << "Impossible d'ouvrir le fichier !" << endl;
+	}
 
 
 	float ** retardement;
@@ -160,7 +221,26 @@ vector < list<int> > calculer_strategie(Replication maReplicationMere)
 	for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
 	{
 		ratio = (float)(rand() % 100);
-		cout << "Ratio de retardement du batiment " << i << " : " << ratio << "%" << endl;
+
+		if(parametres->getModeDebug())
+		{
+			char nom_fichier[50];
+
+			sprintf(nom_fichier,"./DATA_DEBUG/Scenario_%i/Réplication_%i.txt", num_scenario, iPos + 1);
+	
+			ofstream fichier(nom_fichier, ios::out | ios::app);
+ 
+			if(fichier)
+			{
+				fichier << "\t\tRatio de retardement du batiment " << i << " : " << ratio << "%\n";
+				fichier << "\n";
+
+				fichier.close();
+			}
+			else
+				cerr << "Impossible d'ouvrir le fichier !" << endl;
+		}
+
 		for (int j = 0; j <= amplitude_arriere; j++)
 		{
 			if( j == 0 )
@@ -178,14 +258,32 @@ vector < list<int> > calculer_strategie(Replication maReplicationMere)
 		for (int j = 0; j < amplitude_arriere + 1; ++j)
 			retardement[i][j + 1] = retardement[i][j] + retardement[i][j + 1];
 
-	for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
-	{
-		cout << endl << "\t";
-		for (int j = 0; j < amplitude_arriere + 1; ++j)
-			cout << "\t" << retardement[i][j];
-	}
-	cout << endl << endl;
 
+	if(parametres->getModeDebug())
+	{
+		char nom_fichier[50];
+
+		sprintf(nom_fichier,"./DATA_DEBUG/Scenario_%i/Réplication_%i.txt", num_scenario, iPos + 1);
+	
+		ofstream fichier(nom_fichier, ios::out | ios::app);
+ 
+		if(fichier)
+		{
+			for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
+			{
+				fichier << "\n\t";
+				for (int j = 0; j < amplitude_arriere + 1; ++j)
+					fichier << "\t" << retardement[i][j];
+			}
+			fichier << "\n\n\n\n";
+
+			fichier << "\tPROBABILITES CUMULEES FINALES PAR CRENEAU\n\n";
+
+			fichier.close();
+		}
+		else
+			cerr << "Impossible d'ouvrir le fichier !" << endl;
+	}
 
 
 	float ** monTabSolution;
@@ -257,16 +355,33 @@ vector < list<int> > calculer_strategie(Replication maReplicationMere)
 			monTabSolution[i][j + 1] = monTabSolution[i][j] + monTabSolution[i][j + 1];
 
 	
-	for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
-	{
-		cout << endl << "\t";
-		for (int j = 0; j < (signed)maReplicationMere.getCreneau_horaire().size() + amplitude_avant + amplitude_arriere; ++j)
-			cout << "\t" << monTabSolution[i][j];
-	}
-	cout << endl << endl;
-	
 
-	cout << "SOLUTION" << endl << endl;
+	if(parametres->getModeDebug())
+	{
+		char nom_fichier[50];
+
+		sprintf(nom_fichier,"./DATA_DEBUG/Scenario_%i/Réplication_%i.txt", num_scenario, iPos + 1);
+	
+		ofstream fichier(nom_fichier, ios::out | ios::app);
+ 
+		if(fichier)
+		{
+			for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
+			{
+				fichier << "\n\t";
+				for (int j = 0; j < (signed)maReplicationMere.getCreneau_horaire().size() + amplitude_avant + amplitude_arriere; ++j)
+					fichier << "\t" << monTabSolution[i][j];
+			}
+			fichier << "\n\n\n\n";
+
+			fichier << "\tNOUVEAUX EFFECTIFS CUMULES PAR CRENEAU\n\n";
+
+			fichier.close();
+		}
+		else
+			cerr << "Impossible d'ouvrir le fichier !" << endl;
+	}
+
 
 	int ** maPopulation;
 
@@ -304,17 +419,31 @@ vector < list<int> > calculer_strategie(Replication maReplicationMere)
 		}
 	}
 
-	/*
-	for(int i = 0; i < (signed)mesSimulations.at(0).getMax_batiment(); ++i)
+
+	if(parametres->getModeDebug())
 	{
-		cout << endl << "\t";
-		for (int j = 0; j < (signed)mesSimulations.at(0).getCreneau_horaire().size() + amplitude_avant + amplitude_arriere; ++j)
-			cout << "\t" << maPopulation[i][j];
+		char nom_fichier[50];
+
+		sprintf(nom_fichier,"./DATA_DEBUG/Scenario_%i/Réplication_%i.txt", num_scenario, iPos + 1);
+	
+		ofstream fichier(nom_fichier, ios::out | ios::app);
+ 
+		if(fichier)
+		{
+			for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
+			{
+				fichier << "\n\t";
+				for (int j = 0; j < (signed)maReplicationMere.getCreneau_horaire().size() + amplitude_avant + amplitude_arriere; ++j)
+					fichier << "\t" << maPopulation[i][j];
+			}
+			fichier << "\n\n";
+			
+			fichier.close();
+		}
+		else
+			cerr << "Impossible d'ouvrir le fichier !" << endl;
 	}
-	cout << endl << endl;
-	*/
-
-
+	
 
 	for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
 	{
@@ -327,15 +456,31 @@ vector < list<int> > calculer_strategie(Replication maReplicationMere)
 		}
 	}
 
-
-	//Affichage de ma nouvelle stratégie
-	for(int i = 0; i < (signed)monVector.size(); ++i)
+	if(parametres->getModeDebug())
 	{
-		cerr << endl << "\t";
-		for(it = monVector.at(i).begin(); it != monVector.at(i).end(); ++it)
-			cerr << "\t" << (*it);
+		char nom_fichier[50];
+
+		sprintf(nom_fichier,"./DATA_DEBUG/Scenario_%i/Réplication_%i.txt", num_scenario, iPos + 1);
+	
+		ofstream fichier(nom_fichier, ios::out | ios::app);
+ 
+		if(fichier)
+		{
+			for(int i = 0; i < (signed)monVector.size(); ++i)
+			{
+				fichier << "\n\t";
+				for(it = monVector.at(i).begin(); it != monVector.at(i).end(); ++it)
+					fichier << "\t" << (*it);
+			}
+			fichier << "\n\n";
+			
+			fichier.close();
+		}
+		else
+			cerr << "Impossible d'ouvrir le fichier !" << endl;
 	}
-	cerr << endl << endl;
+
+	
 
 	return monVector;
 }
@@ -670,6 +815,69 @@ void afficher_replication(Replication maReplication)
 	}
 
 	cerr << endl << "----------------------------------------------" << endl;
+}
+
+void enregistrer_replication(int num_scenario, int iPos, Replication maReplication)
+{
+	Parametres * parametres;
+	parametres = Parametres::getInstance();
+
+
+	if(parametres->getModeDebug())
+	{
+		char nom_fichier[50];
+
+		sprintf(nom_fichier,"./DATA_DEBUG/Scenario_%i/Réplication_%i.txt", num_scenario + 1, iPos + 1);
+	
+		ofstream fichier(nom_fichier, ios::out | ios::app);
+ 
+		if(fichier)
+		{
+			fichier << "\n----------------------------------------------\n";
+			fichier << "AFFICHAGE DE LA SIMULATION\n\n";
+
+			if (maReplication.getSimulationValide())
+			{
+				fichier << "\tLa simulation est VALIDE\n\n";
+			}
+			else
+			{
+				fichier << "\tLa simulation est INVALIDE\n\n";
+			}
+
+			fichier << "Cette simulation contient " << maReplication.getCreneau_horaire().size() << " creneaux horaires.\n";
+
+			for (int i = 0; i < (signed)maReplication.getCreneau_horaire().size(); i++)
+			{
+				fichier << "\n\n\tCreneau n " << i + 1 << "\n";
+				if(maReplication.getCreneau_horaire().at(i)->valide == true)
+				{
+					fichier << "\t\tCreneau : VALIDE\n\n";
+				}
+				else
+				{
+					fichier << "\t\tCreneau : INVALIDE\n\n";
+				}
+
+				fichier << "\t\tSommet initial : " << maReplication.getCreneau_horaire().at(i)->sommet_initial << "\n";
+				fichier << "\t\tSommet final : " << maReplication.getCreneau_horaire().at(i)->sommet_terminal << "\n\n";
+
+				fichier << "\t\tValeur de Flot Max : " << maReplication.getCreneau_horaire().at(i)->flow_max << "\n\n";
+
+				fichier << "\t\tListe des batiments : \n";
+				for (int j = 0; j < (signed)maReplication.getCreneau_horaire().at(i)->batiment.size(); j++)
+				{
+					fichier << "\t\t\tBatiment n " << maReplication.getCreneau_horaire().at(i)->batiment.at(j)->numero_batiment << " : " << maReplication.getCreneau_horaire().at(i)->batiment.at(j)->population << " personnes\n";
+				}
+			}
+
+			fichier << "\n----------------------------------------------\n";
+
+			fichier.close();
+		}
+		else
+			cerr << "Impossible d'ouvrir le fichier !" << endl;
+	}
 }
 
 
