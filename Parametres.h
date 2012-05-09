@@ -17,6 +17,7 @@ private:
 	int strategie;
 	int amplitude_avant;
 	int amplitude_arriere;
+	double matrice[41][11];
 	bool mode_debug;
 	Parametres(void);
 	~Parametres(void);
@@ -24,6 +25,7 @@ private:
 
 public:
 	void parserFichierConfiguration();
+	void parserFichierMatrice();
 	void validationDataEntrees();
 	void afficherParametres();
 
@@ -44,6 +46,8 @@ public:
 
 	void setModeDebug(bool);
 	bool getModeDebug();
+
+	float getValeurMatrice(int, int);
 
 	static Parametres * getInstance ();
 

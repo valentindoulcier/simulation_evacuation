@@ -773,7 +773,6 @@ Creneau_horaire * parserFichier(string fichier)
 }
 
 
-
 void afficher_replication(Replication maReplication)
 {
 	cerr << endl << "----------------------------------------------" << endl;
@@ -816,6 +815,7 @@ void afficher_replication(Replication maReplication)
 
 	cerr << endl << "----------------------------------------------" << endl;
 }
+
 
 void enregistrer_replication(int num_scenario, int iPos, Replication maReplication)
 {
@@ -878,6 +878,84 @@ void enregistrer_replication(int num_scenario, int iPos, Replication maReplicati
 		else
 			cerr << "Impossible d'ouvrir le fichier !" << endl;
 	}
+}
+
+
+bool Statistiques(vector<Scenario> mesScenarios, Analyse * analyse)
+{
+		//////////////////////////////
+		////Moyennes//////////////////
+		//////////////////////////////
+
+		Parametres * parametres;
+		parametres = Parametres::getInstance();
+
+		bool stop = false;
+
+		
+		float moyenne=0;				//Moyenne pour 5 scénarios
+		float X = 0;					//Moyenne de tous les blocs de 5 scnénarios		
+		float ecartType = 0;
+		float tmp = 0;
+		
+		//
+		float intervalleConf = parametres->getIntervalleConfiance();
+		float A = (1 - (intervalleConf/2));
+		float t = 0;
+		float r;
+
+
+		for(int cpt = analyse->nb_scenario - 1 ; cpt >= analyse->nb_scenario - 5; --cpt)
+		{
+			moyenne += mesScenarios.at(cpt).getMoyenne();
+			//cerr << " Moyenne  ... " << " Compteur  " << cpt << "     Get Moyenne : " << mesScenarios.at(cpt).getMoyenne() << endl;
+		}
+		moyenne /= 5;
+
+		analyse->moyenne.push_back(moyenne);		//on insère les moyennes (des blocs de 5 scénarios)
+
+
+		analyse->intervalle_de_confiance++;
+		//Calcul des nouveaux résultats
+
+
+		for(int cpt = 0; cpt < analyse->nb_scenario / 5; ++ cpt)
+		{
+			X += analyse->moyenne.at(cpt);
+			//cerr << " Moyenne   " << moyenne << endl;
+		}
+		X /= analyse->moyenne.size();			//moyenne de tous les  blocs de 5 scnénarios	
+
+
+		//calcul de l'écart type
+		for(int cpt = 0; cpt < analyse->nb_scenario / 5; ++ cpt)
+		{			
+			//calcul de Somme (xi - Moyenne )
+			tmp += pow((analyse->moyenne.at(cpt) - X),2);
+		}
+		ecartType = sqrt(tmp/(analyse->nb_scenario/5));
+		
+
+		//intervalle de confiance
+		for(int i=1; i<11 ;++i)
+		{
+			for(int j=1; j< 41; ++j)
+			{
+				if(A > parametres->getValeurMatrice(i,j))
+				{
+					t = parametres->getValeurMatrice(0,j) + parametres->getValeurMatrice (i,0);
+					break;
+				}
+			}
+		}
+		
+		r = (t * ecartType )/sqrt((float)(analyse->nb_scenario/5));
+
+		if( (X * r) > ( X * parametres->getIntervalleConfiance()) )	//Si notre +- X% est supérieur à l'intervalle de confiance que l'on souhaite, on continueras ...
+			return false;
+		else
+			return true;
+
 }
 
 
@@ -958,7 +1036,6 @@ long lancer_flot_max(string fichier)
 }
 
 
-
 LPCWSTR MultiCharToUniChar(char* mbString)
 {
 	int len = strlen(mbString) + 1;
@@ -982,6 +1059,7 @@ string UniCharToMultiChar(wchar_t* mbString)
 
 	return (string)ucString;
 }
+
 
 void Color(int f, int t)
 {

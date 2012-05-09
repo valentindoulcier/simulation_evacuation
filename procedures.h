@@ -18,9 +18,18 @@
 
 #include "Replication.h"
 #include "Parametres.h"
-
+#include "Scenario.h"
 
 using namespace std;
+
+
+typedef struct _Analyse
+{
+	int nb_scenario;
+	int intervalle_de_confiance;
+	vector<float> moyenne;
+} Analyse;
+
 
 void lancer_menu();
 
@@ -51,5 +60,7 @@ LPCWSTR MultiCharToUniChar(char*);
 string UniCharToMultiChar(wchar_t*);
 
 void Color(int, int);
+
+bool Statistiques(vector<Scenario>, Analyse *);
 
 #endif

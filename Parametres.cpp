@@ -82,6 +82,11 @@ bool Parametres::getModeDebug()
 	return mode_debug;
 }
 
+float Parametres::getValeurMatrice(int ligne , int col)
+{
+	return matrice[ligne][col];
+}
+
 
 void Parametres::parserFichierConfiguration()
 {
@@ -206,4 +211,74 @@ void Parametres::afficherParametres()
 		cout << "\tMode Debug..............................DESACTIVE" << endl << endl;
 
 	cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl << endl << endl;
+}
+
+
+
+void Parametres::parserFichierMatrice()
+{
+int cpt = 0;
+	char * pch;
+	
+    std::ifstream fic("./DATA_PARAMETRES/matrice.txt");					// le constructeur de ifstream permet d'ouvrir un fichier en lecture
+
+    if (fic)																	// ce test échoue si le fichier n'est pas ouvert
+    {
+        std::string ligne;														// variable contenant chaque ligne lue
+
+		int nbLigne = 0;
+		int nbCol = 11;
+
+        while (std::getline(fic, ligne))										// cette boucle s'arrête dès qu'une erreur de lecture survient
+        {
+            //std::cerr << ligne << std::endl;									// afficher la ligne à l'écran
+						
+			char * tmp = new char[ligne.size() + 1];
+			strcpy(tmp, ligne.c_str());
+
+			pch = strtok(tmp, " \t\n");
+
+			//cerr << "ma ligne : " << tmp << endl;
+
+			if(pch != NULL)
+			{
+				//cerr << " On mouline "  << pch << endl;
+
+				switch(*pch)
+				{
+					case 'a':
+						pch = strtok(NULL, " \t\n");
+						cpt = 0;
+
+						//cerr << "\t\t\t\tMA LIIIIGNE" << nbLigne << endl;
+						
+						while (pch != NULL)
+						{
+							//cerr << " PCH vaut "  << pch << "\t colonne " << cpt << endl;
+							matrice[nbLigne][cpt] = atof(pch);
+							cpt++;
+							pch = strtok(NULL, " \t");
+						}
+												
+						break;
+
+					default: break;
+				}
+				pch = strtok(NULL, " \t\n");
+			}
+			else
+				cerr << " **** PCH NULL *** " << endl;
+
+			nbLigne ++;
+        }
+    }
+
+
+	for(int i = 0 ; i < 41; ++i)
+	{
+		cerr << endl;
+		for(int j = 0; j < 8 ; ++j)
+			cerr << "\t" << matrice [i][j];
+	}
+
 }

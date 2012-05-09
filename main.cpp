@@ -1,4 +1,4 @@
-#include "procedures.h"
+#include "Procedures.h"
 #include "Replication.h"
 #include "Parametres.h"
 #include "Scenario.h"
@@ -6,14 +6,6 @@
 #include "time.h"
 
 using namespace std;
-
-
-typedef struct _Analyse
-{
-	int nb_scenario;
-	int intervalle_de_confiance;
-	vector<float> moyenne;
-} Analyse;
 
 
 int main()
@@ -169,19 +161,11 @@ int main()
 			mesScenarios.push_back(tempo);
 			
 		}
-		/*
-		float moyenne=0;
-		for(int cpt = analyse->nb_scenario; cpt > analyse->nb_scenario - 5; --cpt)
-		{
-			moyenne += mesScenarios.at(cpt).getMoyenne();
-		}
-		moyenne /= 5;
 
-		analyse->moyenne.push_back(moyenne);
-		*/
-		analyse->intervalle_de_confiance++;
 		//Calcul des nouveaux résultats
+		//Statistiques(mesScenarios, analyse);
 
+		analyse->intervalle_de_confiance++;
 	}
 	
 
