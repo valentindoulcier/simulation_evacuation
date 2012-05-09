@@ -33,9 +33,8 @@ void creer_dossier_replication(int num_scenario, int iPos)
 }
 
 
-
 // Fonction qui construit une matrice de la population de la simulation initiale et qui retourne une nouvelle matrice.
-vector < list<int> > calculer_strategie(int num_scenario, int iPos, Replication maReplicationMere)
+int ** calculer_strategie(int num_scenario, int iPos, Replication maReplicationMere)
 {
 	static int compteur = 0;
 	compteur++;
@@ -396,8 +395,8 @@ vector < list<int> > calculer_strategie(int num_scenario, int iPos, Replication 
 			maPopulation[i][j] = 0;
 
 	
-	vector < list<int> > monVector;
-	list<int>::iterator it;
+	//vector < list<int> > monVector;
+	//list<int>::iterator it;
 	//monVector.at(0).push_front(5);
 	//monVector.at(0).front();
 
@@ -443,8 +442,10 @@ vector < list<int> > calculer_strategie(int num_scenario, int iPos, Replication 
 		else
 			cerr << "Impossible d'ouvrir le fichier !" << endl;
 	}
-	
 
+	return maPopulation;
+	
+	/*
 	for(int i = 0; i < (signed)maReplicationMere.getMax_batiment(); ++i)
 	{
 		list<int> maListe;
@@ -483,107 +484,77 @@ vector < list<int> > calculer_strategie(int num_scenario, int iPos, Replication 
 	
 
 	return monVector;
+	*/
 }
 
-void creer_fichiers(int num_scenario, int iPos, Replication maReplicationMere, vector < list<int> > monVector)
+
+void creer_fichiers(int num_scenario, int iPos, Replication maReplicationMere, int ** maPopulation)
 {
 	Parametres * parametres;
 	parametres = Parametres::getInstance();
-
-	char nom_fichier[60];
-
-	int cas = parametres->getStrategie();
-
-	int nb_creneau_simul_mere = maReplicationMere.getCreneau_horaire().size();
-	int nb_creneau_simul_cree = monVector.at(0).size();
-	int nb_creneau_simul_diff = abs(nb_creneau_simul_mere - nb_creneau_simul_cree);
-	int tempo = nb_creneau_simul_mere;
 	
-	//cerr << "Nombre de creneau de la simul mere : " << nb_creneau_simul_mere << endl;
-	//cerr << "Nombre de creneau de la simul cree : " << nb_creneau_simul_cree << endl;
-	//cerr << "\t Rajout de " << abs(nb_creneau_simul_mere - nb_creneau_simul_cree) << " simulations" << endl;
-
-
-	for(int i = 0; i < nb_creneau_simul_cree; ++i) // Je tape la liste
-	{
+	// Nombre de créneau AJOUTES => n + 1 possibilités (avec n = nb_amplitude)
+	int amplitude_avant = parametres->getAmplitudeAvant();
+	int amplitude_arriere = parametres->getAmplitudeArriere();
+	int nb_creneau_simul_mere = maReplicationMere.getCreneau_horaire().size();
+	
+	char nom_fichier[60];
+	
+	for(int i = 0; i < (signed)(parametres->getAmplitudeAvant() + parametres->getAmplitudeArriere() + maReplicationMere.getCreneau_horaire().size()); ++i) // Je tape la liste
+	{		
 		sprintf(nom_fichier,"./DATA_GENERATED/Scenario_%i/Replication_%i/sample_%i.max", num_scenario, iPos + 1, i);
 	
 		ofstream fichier(nom_fichier, ios::out | ios::trunc);						// ouverture en écriture avec effacement du fichier ouvert
- 
+		
 		if(fichier)
 		{
-			if(cas == 0) // On ANTICIPE
+			if (amplitude_avant > 0)
 			{
-				if(nb_creneau_simul_diff > 0) // ON AVANCE ET Y'A DES CRENEAUX EN PLUS
-				{
-					//cerr << "ANTICIPE " << i << endl;
-					fichier << maReplicationMere.getCreneau_horaire().at(0)->debut;
+				fichier << maReplicationMere.getCreneau_horaire().at(0)->debut;
 			
-					for(int j = 0; j < (signed)maReplicationMere.getMax_batiment(); ++j)
-					{
-						fichier << "a " << maReplicationMere.getCreneau_horaire().at(0)->sommet_initial << " " << maReplicationMere.getTableau_batiment().at(j) << " " << monVector.at(j).front() << endl;
-						monVector.at(j).pop_front();
-					}
-
-					fichier << maReplicationMere.getCreneau_horaire().at(0)->fin;
-
-					nb_creneau_simul_diff--;
-				}
-				else
+				for(int j = 0; j < (signed)maReplicationMere.getMax_batiment(); ++j)
 				{
-					//cerr << "NORMAL " << i << endl;
-					fichier << maReplicationMere.getCreneau_horaire().at(i - abs(nb_creneau_simul_mere - nb_creneau_simul_cree))->debut;
-			
-					for(int j = 0; j < (signed)maReplicationMere.getMax_batiment(); ++j)
-					{
-						fichier << "a " << maReplicationMere.getCreneau_horaire().at(i - abs(nb_creneau_simul_mere - nb_creneau_simul_cree))->sommet_initial << " " << maReplicationMere.getTableau_batiment().at(j) << " " << monVector.at(j).front() << endl;
-						monVector.at(j).pop_front();
-					}
-
-					fichier << maReplicationMere.getCreneau_horaire().at(i - abs(nb_creneau_simul_mere - nb_creneau_simul_cree))->fin;
+					fichier << "a " << maReplicationMere.getCreneau_horaire().at(0)->sommet_initial << " " << maReplicationMere.getTableau_batiment().at(j) << " " << maPopulation[j][i] << endl;
 				}
+
+				fichier << maReplicationMere.getCreneau_horaire().at(0)->fin;
+
+				amplitude_avant--;
 			}
-			else if(cas == 1) // ON RETARDE
+			else if (nb_creneau_simul_mere > 0)
 			{
-				if(tempo > 0)
-				{
-					cerr << "NORMAL " << i << endl;
-					fichier << maReplicationMere.getCreneau_horaire().at(i - abs(nb_creneau_simul_mere - nb_creneau_simul_cree))->debut;
+				fichier << maReplicationMere.getCreneau_horaire().at(i - parametres->getAmplitudeAvant())->debut;
 			
-					for(int j = 0; j < (signed)maReplicationMere.getMax_batiment(); ++j)
-					{
-						fichier << "a " << maReplicationMere.getCreneau_horaire().at(i - abs(nb_creneau_simul_mere - nb_creneau_simul_cree))->sommet_initial << " " << maReplicationMere.getTableau_batiment().at(j) << " " << monVector.at(j).front() << endl;
-						monVector.at(j).pop_front();
-					}
-
-					fichier << maReplicationMere.getCreneau_horaire().at(i - abs(nb_creneau_simul_mere - nb_creneau_simul_cree))->fin;
-
-					tempo--;
-				}
-				else if(nb_creneau_simul_diff > 0) // ON RETARDE ET Y'A DES CRENEAUX EN PLUS
+				for(int j = 0; j < (signed)maReplicationMere.getMax_batiment(); ++j)
 				{
-					cerr << "RETARDE " << i << endl;
-					fichier << maReplicationMere.getCreneau_horaire().at(maReplicationMere.getCreneau_horaire().size())->debut;
-			
-					for(int j = 0; j < (signed)maReplicationMere.getMax_batiment(); ++j)
-					{
-						fichier << "a " << maReplicationMere.getCreneau_horaire().at(maReplicationMere.getCreneau_horaire().size())->sommet_initial << " " << maReplicationMere.getTableau_batiment().at(j) << " " << monVector.at(j).front() << endl;
-						monVector.at(j).pop_front();
-					}
-
-					fichier << maReplicationMere.getCreneau_horaire().at(maReplicationMere.getCreneau_horaire().size())->fin;
-
-					nb_creneau_simul_diff--;
+					fichier << "a " << maReplicationMere.getCreneau_horaire().at(i - parametres->getAmplitudeAvant())->sommet_initial << " " << maReplicationMere.getTableau_batiment().at(j) << " " << maPopulation[j][i] << endl;
 				}
+
+				fichier << maReplicationMere.getCreneau_horaire().at(i - parametres->getAmplitudeAvant())->fin;
+
+				nb_creneau_simul_mere--;
 			}
-			else
-				cerr << "PROBLEME : ANTICIPE OU RETARDE ?" << endl;
- 
+			else if (amplitude_arriere > 0)
+			{
+				fichier << maReplicationMere.getCreneau_horaire().at(maReplicationMere.getCreneau_horaire().size() - 1)->debut;
+
+				for(int j = 0; j < (signed)maReplicationMere.getMax_batiment(); ++j)
+				{
+					fichier << "a " << maReplicationMere.getCreneau_horaire().at(maReplicationMere.getCreneau_horaire().size() - 1)->sommet_initial << " " << maReplicationMere.getTableau_batiment().at(j) << " " << maPopulation[j][i] << endl;
+				}
+
+				fichier << maReplicationMere.getCreneau_horaire().at(maReplicationMere.getCreneau_horaire().size() - 1)->fin;
+
+				amplitude_arriere--;
+			}
+			
 			fichier.close();
+
 		}
 		else
 			cerr << "Impossible d'ouvrir le fichier !" << endl;
 	}
+
 }
 
 
@@ -616,14 +587,18 @@ Replication construction_replication(vector<string> listeFichiers)
 {
 	Replication maReplication;
 
-	for (int i = 0; i < (signed)listeFichiers.size(); i++)
+	for (int i = 0; i < (signed)listeFichiers.size(); ++i)
+	{
 		maReplication.setCreneauHoraire(parserFichier(listeFichiers.at(i)));
+	}
 	
+
 	//maSimulation.getCreneau_horaire().at(maSimulation.getCreneau_horaire().size() - 1)->batiment.size()
 	for (int i = 0; i < (signed)maReplication.getCreneau_horaire().size(); i++)
 		if(maReplication.getSimulationValide() == true)
 			if(maReplication.getCreneau_horaire().at(i)->valide == false)
 				maReplication.setValide(false);
+
 
 	//Je mets à jour le nombre max de batiment
 	for(int j = 0; j < (signed)maReplication.getCreneau_horaire().size(); ++j)
@@ -633,6 +608,7 @@ Replication construction_replication(vector<string> listeFichiers)
 				maReplication.setTableau_batiment(maReplication.getCreneau_horaire().at(j)->batiment.at(k)->numero_batiment);
 				maReplication.incrementer_compteur_batiment();
 			}
+
 
 	/*
 	for(int i = 0; i < (signed)maSimulation.getMax_batiment(); ++i)

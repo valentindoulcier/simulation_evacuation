@@ -1,11 +1,11 @@
-﻿La génération a démarré 09/05/2012 10:55:43.
+﻿La génération a démarré 10/05/2012 00:32:36.
      1>Projet "C:\Users\Valentin\Desktop\EPU_DI_4A_SDLD_Projet_ACCELL\test_flot\test_flot.vcxproj" sur le nœud 2 (build cible(s)).
      1>InitializeBuildStatus:
          Création de "Debug\test_flot.unsuccessfulbuild", car "AlwaysCreate" a été spécifié.
        ClCompile:
          c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _CRT_SECURE_NO_WARNINGS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt Procedures.cpp
          Procedures.cpp
-     1>c:\users\valentin\desktop\epu_di_4a_sdld_projet_accell\test_flot\procedures.cpp(902): warning C4244: 'initialisation' : conversion de 'int' en 'float', perte possible de données
+     1>c:\users\valentin\desktop\epu_di_4a_sdld_projet_accell\test_flot\procedures.cpp(878): warning C4244: 'initialisation' : conversion de 'int' en 'float', perte possible de données
        ManifestResourceCompile:
          Toutes les sorties sont à jour.
        Link:
@@ -28,4 +28,4 @@
 
 La génération a réussi.
 
-Temps écoulé 00:00:14.71
+Temps écoulé 00:00:11.07

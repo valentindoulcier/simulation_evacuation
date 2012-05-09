@@ -39,9 +39,10 @@ void creer_replication(int, int, Replication);
 
 void creer_dossier_replication(int, int);
 
-vector < list<int> > calculer_strategie(int, int, Replication);
+//vector < list<int> > calculer_strategie(int, int, Replication);
+int ** calculer_strategie(int, int, Replication);
 
-void creer_fichiers(int, int, Replication, vector < list<int> >);
+void creer_fichiers(int, int, Replication, int **);
 
 vector<string> liste_fichiers_du_dossier(char *);
 

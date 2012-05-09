@@ -106,7 +106,6 @@ int main()
 			sprintf(nom_dossier,"./DATA_GENERATED/Scenario_%i", analyse->nb_scenario);
 			CreateDirectory(MultiCharToUniChar(nom_dossier), NULL);
 
-
 			// On créé les réplications
 			repliquer(analyse->nb_scenario, parametres->getNbReplication(), maReplicationMere);
 
@@ -151,19 +150,20 @@ int main()
 
 				tempo.setReplications(construction_replication(listeFichiers));
 			}
-
+			
 			for(int cpt = 0; cpt < parametres->getNbReplication(); ++cpt)
 			{
 				if(tempo.getReplications().at(cpt).getSimulationValide())
 					somme++;
 			}
+
 			tempo.setMoyenne(somme/parametres->getNbReplication());
 			mesScenarios.push_back(tempo);
 			
 		}
 
 		//Calcul des nouveaux résultats
-		//Statistiques(mesScenarios, analyse);
+		Statistiques(mesScenarios, analyse);
 
 		analyse->intervalle_de_confiance++;
 	}
