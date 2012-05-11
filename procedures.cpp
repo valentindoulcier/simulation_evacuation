@@ -785,7 +785,7 @@ void afficher_replication(Replication maReplication)
 		cerr << "\t\tListe des batiments : " << endl;
 		for (int j = 0; j < (signed)maReplication.getCreneau_horaire().at(i)->batiment.size(); j++)
 		{
-			cerr << "\t\t\tBatiment n " << maReplication.getCreneau_horaire().at(i)->batiment.at(j)->numero_batiment << " : " << maReplication.getCreneau_horaire().at(i)->batiment.at(j)->population << " personnes" << endl;
+			//cerr << "\t\t\tBatiment n " << maReplication.getCreneau_horaire().at(i)->batiment.at(j)->numero_batiment << " : " << maReplication.getCreneau_horaire().at(i)->batiment.at(j)->population << " personnes" << endl;
 		}
 	}
 
